@@ -9,17 +9,16 @@
 
 ## Overview
 ### Description
-[Description of your app]
-(For Zoomers by Zoomers)
+Standup is a platform that allows its users to moderate the content they see. Just like standup comedy, content that people like gets more attention and content they don't "sits down" (stops being shown in feeds). Users can only navigate through content by swiping right/left to signal they liked/disliked it. Content can be interacted with by swiping up to see comments and details about the community it came from. Content can be reported by swiping down. Standup content is posted to two types of communities: me/ and up/. me/ communities are controlled by an individual and the individual account holder is the only one that can post to their personal community. up/ communities allow any follower to post to them and are a great way to get your content seen by those with similar interests. This system allows even the smallest creators to have a chance at stardom - if you post high quality content that is fitting to a community, people will start to follow your personal community!
 
 ### App Evaluation
 [Evaluation of your app across the following attributes]
-- **Category:**
-- **Mobile:**
-- **Story:**
-- **Market:**
-- **Habit:**
-- **Scope:**
+   - **Category**: Social Networking/Entertainment
+   - **Mobile**: Camera is used to share images and videos. Push notifications when people interact with your content.
+   - **Story**: Creates more interaction on posts.  Disliked content will be taken down. 
+   - **Market**: Young adults
+   - **Habit**: Users will open this app many times in a day- content is very short and when using the "hot" sort only the best new content will be shown. They will also be able to post their own microblog content. The average user will mostly consume but probably create at least once a week.
+   - **Scope**: This app will be challenging but it is probably possible to build by the end. A stripped down version would still be entertaining.
 
 ## Product Spec
 
