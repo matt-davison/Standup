@@ -9,7 +9,7 @@
 
 ## Overview
 ### Description
-Standup is a platform that allows its users to moderate the content they see. Just like standup comedy, content that people like gets more attention and content they don't "sits down" (stops being shown in feeds). Users can only navigate through content by swiping right/left to signal they liked/disliked it. Content can be interacted with by swiping up to see comments and details about the community it came from. Content can be reported by swiping down. Standup content is posted to two types of communities: me/ and up/. me/ communities are controlled by an individual and the individual account holder is the only one that can post to their personal community. up/ communities allow any follower to post to them and are a great way to get your content seen by those with similar interests. This system allows even the smallest creators to have a chance at stardom - if you post high quality content that is fitting to a community, people will start to follow your personal community!
+Standup is a platform that allows its users to moderate the content they see. Just like standup comedy, content that people like gets more attention and content they don't "sits down" (stops being shown in feeds). Users can only navigate through content by swiping up/down to signal they liked/disliked it. Content can be interacted with by swiping up to see comments and details about the community it came from. Content can be reported by swiping down. Standup content is posted to two types of communities: me/ and up/. me/ communities are controlled by an individual and the individual account holder is the only one that can post to their personal community. up/ communities allow any follower to post to them and are a great way to get your content seen by those with similar interests. This system allows even the smallest creators to have a chance at stardom - if you post high quality content that is fitting to a community, people will start to follow your personal community!
 
 ### App Evaluation
 [Evaluation of your app across the following attributes]
@@ -124,9 +124,6 @@ Standup is a platform that allows its users to moderate the content they see. Ju
 
 https://www.figma.com/file/lbDroPNd0w1CCVdORwZZ1w/Standup?node-id=0%3A1
 
-### [BONUS] Digital Wireframes & Mockups
-
-### [BONUS] Interactive Prototype
 
 ## Schema 
 [This section will be completed in Unit 9]
