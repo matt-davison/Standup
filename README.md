@@ -126,10 +126,61 @@ https://www.figma.com/file/lbDroPNd0w1CCVdORwZZ1w/Standup?node-id=0%3A1
 
 
 ## Schema 
-[This section will be completed in Unit 9]
 ### Models
-[Add table of models]
+User
+| Property      | Type      | Description        |
+|---------------|-----------|--------------------|
+|objectId|String|User's id|
+|username|String|The User's username|
+|email|String|The User's email address|
+|password|String|The User's password|
+|phone|String|The User's phone number|
+|communities|Array<Pointer to Community>|The communities a User follows|
+|following|Array<Pointer to User>|The Users a user follows|
+|followers|Array<Pointer to User>|The Users following this user|
+|posts|Array<Pointer to Post>|The User's posts|
+|tagHistory|JSONObject|The User's tag history and preferences [{tagId, likes, views}]|
+
+Post
+| Property      | Type      | Description        |
+|---------------|-----------|--------------------|
+|objectId|String|Post's id|
+|author|Pointer to User|The author|
+|createdAt|Date|When the post was created|
+|updatedAt|Date|When the post was updated|
+|postedTo|Array<Pointer to Community>|Where the post is shared|
+|title|String|The Post's title|
+|media|File|The Post's attached media|
+|description|The Posts's description|
+|rating|Number|The Post's rating|
+|views|Number|The Post's views|
+|tags|Array<Pointer to Tag>|The Post's tags|
+
+Community
+| Property      | Type      | Description        |
+|---------------|-----------|--------------------|
+|objectId|String|The Community's id|
+|name|String|The Community's name|
+|description|String|The Community's description|
+|createdAt|Date|When the Community was created|
+|banner|File|The Community's banner|
+|icon|File|The Community's icon|
+|mods|Array<Pointer to User>|The Community's mods|
+|userCount|Number|The number of followers|
+|banned|Array<Pointer to User>|Users banned from this Community|
+|posts|Array<Pointer to Post>|Posts made to this Community|
+|tags|Array<Pointer to Tag>|Tags for this Community|
+   
+Tag
+| Property      | Type      | Description        |
+|---------------|-----------|--------------------|
+|objectId|String|Tag's id|
+|tag|String|The tag|
+|communities|Array<Pointer to Community>|Communities with this tag|
+|posts|Array<Pointer to Post>|Posts using this tag|
+|postsCount|Number|Number of Posts using this tag|
+
+
 ### Networking
 - [Add list of network requests by screen ]
 - [Create basic snippets for each Parse network request]
-- [OPTIONAL: List endpoints if using existing API such as Yelp]
