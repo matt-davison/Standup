@@ -31,7 +31,6 @@ Standup is a platform that allows its users to moderate the content they see. Ju
 * User can follow Communities
 * User can create Communities
 * User can vote for content to Sit Down or Stand (swipe left or right)
-* User can report content (swipe down)
 * User can interact with content/creator (swipe up)
 * User can view a specific Community's feed
 * User can sort a feed by Hot, Best, New
@@ -44,6 +43,7 @@ Standup is a platform that allows its users to moderate the content they see. Ju
 **Optional Nice-to-have Stories**
 
 * User can filter home feed by up/ communities or me/ communities
+* User can report content
 * User has settings menu
     * Change name
     * Change privacy of posts made to your personal community
@@ -182,5 +182,14 @@ Tag
 
 
 ### Networking
-- [Add list of network requests by screen ]
-- [Create basic snippets for each Parse network request]
+Home Feed Screen
+- (Read/GET) Query all posts where user is author
+- (Create/POST) Create a new like on a post
+- (Create/POST) Create a new dislike on a post
+- (Create/POST) Create a new comment on a post
+- (Create/POST) Create a new report for a post
+Create Post Screen
+- (Create/POST) Create a new post object
+Profile Screen
+- (Read/GET) Query logged in user object
+- (Update/PUT) Update user profile image
