@@ -41,7 +41,7 @@ Standup is a platform that allows its users to moderate the content they see. Ju
     * Text Post
 
 **Optional Nice-to-have Stories**
-
+* Collaborative filtering sort
 * User can filter home feed by up/ communities or me/ communities
 * User can report content
 * User has settings menu
@@ -135,11 +135,12 @@ User
 |email|String|The User's email address|
 |password|String|The User's password|
 |phone|String|The User's phone number|
-|communities|Array<Pointer to Community>|The communities a User follows|
-|following|Array<Pointer to User>|The Users a user follows|
-|followers|Array<Pointer to User>|The Users following this user|
-|posts|Array<Pointer to Post>|The User's posts|
+|communities|Relation to Community|The communities a User follows|
+|following|Relation to User|The Users a user follows|
+|followers|Relation to User|The Users following this user|
+|posts|Relation to Post|The User's posts|
 |tagHistory|JSONObject|The User's tag history and preferences [{tagId, likes, views}]|
+|likeHistory|Relation to Post|The posts a user has liked|
 
 Post
 | Property      | Type      | Description        |
@@ -148,13 +149,16 @@ Post
 |author|Pointer to User|The author|
 |createdAt|Date|When the post was created|
 |updatedAt|Date|When the post was updated|
-|postedTo|Array<Pointer to Community>|Where the post is shared|
+|postedTo|Relation to Community|Where the post is shared|
 |title|String|The Post's title|
 |media|File|The Post's attached media|
 |description|The Posts's description|
 |rating|Number|The Post's rating|
 |views|Number|The Post's views|
-|tags|Array<Pointer to Tag>|The Post's tags|
+|likers|Relation to User|Users that liked this post|
+|viwerers|Relation to User|Users that viewed this post|
+|tags|Relation to Tag|The Post's tags|
+
 
 Community
 | Property      | Type      | Description        |
@@ -165,31 +169,36 @@ Community
 |createdAt|Date|When the Community was created|
 |banner|File|The Community's banner|
 |icon|File|The Community's icon|
-|mods|Array<Pointer to User>|The Community's mods|
+|mods|Relationt to User|The Community's mods|
 |userCount|Number|The number of followers|
-|banned|Array<Pointer to User>|Users banned from this Community|
-|posts|Array<Pointer to Post>|Posts made to this Community|
-|tags|Array<Pointer to Tag>|Tags for this Community|
+|banned|Relation to User|Users banned from this Community|
+|posts|Relation to Post|Posts made to this Community|
+|tags|Relation to Tag|Tags for this Community|
    
 Tag
 | Property      | Type      | Description        |
 |---------------|-----------|--------------------|
 |objectId|String|Tag's id|
 |tag|String|The tag|
-|communities|Array<Pointer to Community>|Communities with this tag|
-|posts|Array<Pointer to Post>|Posts using this tag|
+|communities|Relation to Post|Communities with this tag|
+|posts|Relation to Post|Posts using this tag|
 |postsCount|Number|Number of Posts using this tag|
 
 
 ### Networking
 Home Feed Screen
-- (Read/GET) Query all posts where user is author
+- (Read/GET) Query new posts
 - (Create/POST) Create a new like on a post
 - (Create/POST) Create a new dislike on a post
 - (Create/POST) Create a new comment on a post
 - (Create/POST) Create a new report for a post
+Explore Screen
+- (Read/GET) User's followed communities
+- (Read/GET) Query recommended posts
+- (Read/GET) Query for specific community
 Create Post Screen
 - (Create/POST) Create a new post object
 Profile Screen
 - (Read/GET) Query logged in user object
 - (Update/PUT) Update user profile image
+- (Read/GET) Query all posts where user is author
