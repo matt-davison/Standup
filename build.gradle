@@ -16,9 +16,15 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven { url "https://jitpack.io" }
     }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+ext {
+    appCompatVersion = '1.1.0'
+    designSupportVersion = '1.1.0'
+    recyclerViewVersion = '1.1.0'
 }
