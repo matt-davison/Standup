@@ -51,6 +51,7 @@ Standup is a platform that allows its users to moderate the content they see. Ju
 * Can filter Search by creator or community
 * User can create livestreams (cannot be posted to a community and are displayed at top of home feed and on user's page)
 * Detail view for a community
+* Blockchain rewards/awards system
 
 
 ### 2. Screen Archetypes
@@ -136,9 +137,9 @@ User
 |password|String|The User's password|
 |phone|String|The User's phone number|
 |communities|Relation to Community|The communities a User follows|
-|following|Relation to User|The Users a user follows|
-|followers|Relation to User|The Users following this user|
-|posts|Relation to Post|The User's posts|
+|followers|Number|The number of followers|
+|followings|Number|The number of followings|
+|following|Relation to User|The Users this User is following|
 |tagHistory|JSONObject|The User's tag history and preferences [{tagId, likes, views}]|
 |likeHistory|Relation to Post|The posts a user has liked|
 
@@ -149,16 +150,14 @@ Post
 |author|Pointer to User|The author|
 |createdAt|Date|When the post was created|
 |updatedAt|Date|When the post was updated|
-|postedTo|Relation to Community|Where the post is shared|
 |title|String|The Post's title|
 |media|File|The Post's attached media|
 |description|The Posts's description|
 |rating|Number|The Post's rating|
+|likes|Number|The Post's likes|
 |views|Number|The Post's views|
-|likers|Relation to User|Users that liked this post|
-|viwerers|Relation to User|Users that viewed this post|
+|viewers|Relation to User|Users that viewed this post|
 |tags|Relation to Tag|The Post's tags|
-
 
 Community
 | Property      | Type      | Description        |
@@ -169,7 +168,7 @@ Community
 |createdAt|Date|When the Community was created|
 |banner|File|The Community's banner|
 |icon|File|The Community's icon|
-|mods|Relationt to User|The Community's mods|
+|mods|Relation to User|The Community's mods|
 |userCount|Number|The number of followers|
 |banned|Relation to User|Users banned from this Community|
 |posts|Relation to Post|Posts made to this Community|
@@ -180,18 +179,14 @@ Tag
 |---------------|-----------|--------------------|
 |objectId|String|Tag's id|
 |tag|String|The tag|
-|communities|Relation to Post|Communities with this tag|
-|posts|Relation to Post|Posts using this tag|
 |postsCount|Number|Number of Posts using this tag|
-
 
 ### Networking
 Home Feed Screen
 - (Read/GET) Query new posts
 - (Create/POST) Create a new like on a post
-- (Create/POST) Create a new dislike on a post
+- (Create/POST) Create a new view on a post
 - (Create/POST) Create a new comment on a post
-- (Create/POST) Create a new report for a post
 Explore Screen
 - (Read/GET) User's followed communities
 - (Read/GET) Query recommended posts
@@ -201,4 +196,7 @@ Create Post Screen
 Profile Screen
 - (Read/GET) Query logged in user object
 - (Update/PUT) Update user profile image
+- (Update/PUT) Update user username
 - (Read/GET) Query all posts where user is author
+- (Read/GET) Query followers
+- (Read/GET) Query following
