@@ -6,7 +6,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.mdavison.standup.R;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -18,12 +20,7 @@ import com.parse.ParseUser;
  */
 public class LoginActivity extends AppCompatActivity {
 
-    public static final String TAG = "LoginActivity";
-
-    private EditText etUsername;
-    private EditText etPassword;
-    private Button btnLogin;
-    private Button btnCreate;
+    private static final String TAG = "LoginActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +31,10 @@ public class LoginActivity extends AppCompatActivity {
             goMainActivity();
         }
 
-        etUsername = findViewById(R.id.etUsername);
-        etPassword = findViewById(R.id.etPassword);
-        btnLogin = findViewById(R.id.btnLogin);
+        final EditText etUsername = findViewById(R.id.etUsername);
+        final EditText etPassword = findViewById(R.id.etPassword);
+
+        final Button btnLogin = findViewById(R.id.btnLogin);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -46,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        btnCreate = findViewById(R.id.btnCreate);
+        final Button btnCreate = findViewById(R.id.btnCreate);
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

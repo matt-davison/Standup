@@ -22,22 +22,17 @@ import com.parse.SignUpCallback;
  */
 public class SignupActivity extends AppCompatActivity {
 
-    public static final String TAG = "SignupActivity";
-
-    private EditText etUsername;
-    private EditText etPassword;
-    private EditText etEmail;
-    private Button btnCreate;
+    private static final String TAG = "SignupActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        etUsername = findViewById(R.id.etUsername);
-        etPassword = findViewById(R.id.etPassword);
-        etEmail = findViewById(R.id.etEmail);
-        btnCreate = findViewById(R.id.btnCreate);
+        final EditText etUsername = findViewById(R.id.etUsername);
+        final EditText etPassword = findViewById(R.id.etPassword);
+        final EditText etEmail = findViewById(R.id.etEmail);
+        final Button btnCreate = findViewById(R.id.btnCreate);
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
