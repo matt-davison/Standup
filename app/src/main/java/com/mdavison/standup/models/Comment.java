@@ -2,6 +2,7 @@ package com.mdavison.standup.models;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 /**
  * This model represents a comment and is compatible with the Parse database
@@ -17,5 +18,21 @@ public class Comment extends ParseObject {
 
     public Comment() {
         //required empty constructor
+    }
+
+    public String getComment() {
+        return getString(KEY_COMMENT);
+    }
+
+    public void setComment(String comment) {
+        put(KEY_COMMENT, comment);
+    }
+
+    public ParseUser getAuthor() {
+        return getParseUser(KEY_AUTHOR);
+    }
+
+    public void setAuthor(ParseUser user) {
+        put(KEY_AUTHOR, user);
     }
 }

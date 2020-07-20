@@ -60,4 +60,19 @@ public class Post extends ParseObject {
     public void setAuthor(ParseUser user) {
         put(KEY_AUTHOR, user);
     }
+
+    public boolean addLike(ParseUser user) {
+        //TODO: Add check if user has already liked post and if so, return false
+        put(KEY_LIKERS, user);
+        put(KEY_LIKE_COUNT, getNumber(KEY_LIKE_COUNT).longValue() + 1);
+        saveInBackground();
+        return true;
+    }
+
+    public boolean addViewer(ParseUser user) {
+        put(KEY_VIEWERS, user);
+        put(KEY_VIEW_COUNT, getNumber(KEY_VIEW_COUNT).longValue() + 1);
+        saveInBackground();
+        return true;
+    }
 }
