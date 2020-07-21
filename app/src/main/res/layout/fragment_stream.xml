@@ -6,23 +6,17 @@
     tools:context=".fragments.StreamFragment">
 
     <include
-        android:id="@+id/post"
-        layout="@layout/item_post"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
-
-    <include
         android:id="@+id/postBehind"
         layout="@layout/item_post"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
 
-    <Button
-        android:id="@+id/btnLike"
+    <include
+        android:id="@+id/post"
+        layout="@layout/item_post"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="next" />
+        android:layout_gravity="center" />
 
 </FrameLayout>
