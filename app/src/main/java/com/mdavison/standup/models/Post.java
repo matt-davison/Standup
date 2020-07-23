@@ -63,15 +63,15 @@ public class Post extends ParseObject {
 
     public boolean addLike(ParseUser user) {
         //TODO: Add check if user has already liked post and if so, return false
-        put(KEY_LIKERS, user);
-        put(KEY_LIKE_COUNT, getNumber(KEY_LIKE_COUNT).longValue() + 1);
+        getRelation(KEY_LIKERS).add(user);
+        increment(KEY_LIKE_COUNT);
         saveInBackground();
         return true;
     }
 
     public boolean addViewer(ParseUser user) {
-        put(KEY_VIEWERS, user);
-        put(KEY_VIEW_COUNT, getNumber(KEY_VIEW_COUNT).longValue() + 1);
+        getRelation(KEY_VIEWERS).add(user);
+        increment(KEY_VIEW_COUNT);
         saveInBackground();
         return true;
     }

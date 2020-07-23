@@ -28,7 +28,8 @@ Usage:
   }
 */
 public class OnSwipeTouchListener implements View.OnTouchListener {
-
+    public static final int SWIPE_THRESHOLD = 100;
+    public static final int SWIPE_VELOCITY_THRESHOLD = 100;
     private GestureDetector gestureDetector;
 
     public OnSwipeTouchListener(Context c) {
@@ -42,8 +43,8 @@ public class OnSwipeTouchListener implements View.OnTouchListener {
     private final class GestureListener extends
             GestureDetector.SimpleOnGestureListener {
 
-        private static final int SWIPE_THRESHOLD = 100;
-        private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+        //private static final int SWIPE_THRESHOLD = 100;
+        //private static final int SWIPE_VELOCITY_THRESHOLD = 100;
 
         @Override
         public boolean onDown(MotionEvent e) {
@@ -53,7 +54,7 @@ public class OnSwipeTouchListener implements View.OnTouchListener {
         // Determines the fling velocity and then fires the appropriate swipe event accordingly
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            boolean result = false;
+            boolean result = true;
             try {
                 float diffY = e2.getY() - e1.getY();
                 float diffX = e2.getX() - e1.getX();

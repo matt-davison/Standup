@@ -4,8 +4,10 @@
     android:id="@+id/cvPost"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="64dp"
-    android:layout_marginBottom="64dp"
+    android:layout_marginTop="16dp"
+    android:layout_marginBottom="16dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
     card_view:cardCornerRadius="32dp"
     card_view:cardElevation="6dp">
 
@@ -28,6 +30,7 @@
             android:layout_marginStart="0dp"
             android:layout_marginTop="0dp"
             android:text="Post Title"
+            android:textColor="@android:color/primary_text_light"
             android:textSize="30sp"
             android:textStyle="bold" />
 
@@ -48,6 +51,7 @@
             android:layout_below="@+id/ivMedia"
             android:layout_marginTop="0dp"
             android:text="Post Description"
+            android:textColor="@android:color/primary_text_light"
             android:textSize="18sp" />
 
         <TextView
@@ -68,6 +72,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="0dp"
             android:text="Author's username" />
+
 
     </RelativeLayout>
 </androidx.cardview.widget.CardView>
