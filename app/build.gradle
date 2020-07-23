@@ -4,6 +4,51 @@ def keyPropertiesFile = rootProject.file("key.properties")
 def keyProperties = new Properties()
 keyProperties.load(new FileInputStream(keyPropertiesFile))
 
+// Apply the PESDKPlugin
+//TODO: Not finding license in app/src/main/assets/LICENSE
+//apply plugin: 'ly.img.android.sdk'
+// Configure the PESDKPlugin
+// Apply Kotlin Plugin
+apply plugin: 'kotlin-android'
+/*
+imglyConfig {
+
+    pesdk {
+        enabled true
+        licencePath 'pesdk_android_license.dms'
+    }
+
+    // Define the modules you are need
+    modules {
+        // Add all the UI modules you are need
+        include 'ui:core'
+        include 'ui:text'
+        include 'ui:focus'
+        include 'ui:frame'
+        include 'ui:brush'
+        include 'ui:filter'
+        //include 'ui:camera'
+        include 'ui:sticker'
+        include 'ui:overlay'
+        include 'ui:transform'
+        include 'ui:adjustment'
+        include 'ui:text-design'
+
+
+        // Add the serializer if you need
+        include 'backend:serializer'
+
+        // Add asset packs if you need
+        include 'assets:font-basic'
+        include 'assets:frame-basic'
+        include 'assets:filter-basic'
+        include 'assets:overlay-basic'
+        include 'assets:sticker-shapes'
+        include 'assets:sticker-emoticons'
+    }
+}
+ */
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.0"
@@ -25,6 +70,11 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+    /* Set Java Language level to Java 1.8+ */
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
