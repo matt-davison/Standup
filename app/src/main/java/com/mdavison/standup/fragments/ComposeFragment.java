@@ -4,10 +4,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageDecoder;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,10 +36,7 @@ import com.parse.ParseRelation;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -53,8 +51,8 @@ import static android.os.Environment.DIRECTORY_PICTURES;
  * This Fragment implements the Compose user story, allowing the user to
  * create and upload posts.
  */
-public class ComposeFragment extends Fragment implements
-        MultiSelectionSpinnerDialog.OnMultiSpinnerSelectionListener {
+public class ComposeFragment extends Fragment
+        implements MultiSelectionSpinnerDialog.OnMultiSpinnerSelectionListener {
 
     public final static int PICK_PHOTO_CODE = 8;
     private static final String TAG = "ComposeFragment";
@@ -67,6 +65,7 @@ public class ComposeFragment extends Fragment implements
     private MultiSpinner msCommunity;
     private HashMap<String, Community> userCommunities;
     private List<Community> selectedCommunities;
+
     public ComposeFragment() {
         // Required empty public constructor
     }
@@ -105,16 +104,15 @@ public class ComposeFragment extends Fragment implements
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String description = etDescription.getText().toString();
-                if (description.isEmpty()) {
-                    Toast.makeText(getContext(),
-                            "Description cannot be " + "empty",
+                if (etTitle.getText().toString().isEmpty()) {
+                    Toast.makeText(getContext(), "Title cannot be empty",
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (photoFile == null || ivPostImage.getDrawable() == null) {
-                    Toast.makeText(getContext(), "There is no image!",
-                            Toast.LENGTH_SHORT).show();
+                if (selectedCommunities == null || selectedCommunities.isEmpty()) {
+                    Toast.makeText(getContext(),
+                            "Select communities to post to", Toast.LENGTH_SHORT)
+                            .show();
                     return;
                 }
                 savePost();
@@ -129,64 +127,31 @@ public class ComposeFragment extends Fragment implements
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                // by this point we have the camera photo on disk
                 Bitmap takenImage =
-                        BitmapFactory.decodeFile(photoFile.getAbsolutePath());
-                // RESIZE BITMAP, see section below
-                // Load the taken image into a preview
+                        rotateBitmapOrientation(photoFile.getAbsolutePath());
                 ivPostImage.setImageBitmap(takenImage);
-            } else { // Result was a failure
+            } else {
                 Toast.makeText(getContext(), "Picture wasn't taken!",
                         Toast.LENGTH_SHORT).show();
             }
         }
         if (requestCode == PICK_PHOTO_CODE && data != null) {
             Uri photoUri = data.getData();
-            /*
-            File mediaStorageDir = new File(getContext()
-                    .getExternalFilesDir(DIRECTORY_PICTURES), TAG);
-
-            if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
-                Log.d(TAG, "failed to create directory");
-            }
-            String destinationFilename = mediaStorageDir.getPath() + File.separator + PHOTO_FILENAME;
-            BufferedInputStream bis = null;
-            BufferedOutputStream bos = null;
-            try {
-                bis = new BufferedInputStream(new FileInputStream(photoUri.getPath()));
-                bos = new BufferedOutputStream(new FileOutputStream(destinationFilename, false));
-                byte[] buf = new byte[1024];
-                bis.read(buf);
-                do {
-                    bos.write(buf);
-                } while(bis.read(buf) != -1);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (bis != null) bis.close();
-                    if (bos != null) bos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            */
             Bitmap selectedImage = loadFromUri(photoUri);
-            File mediaStorageDir = new File(getContext()
-                    .getExternalFilesDir(DIRECTORY_PICTURES), TAG);
-
+            File mediaStorageDir = new File(
+                    getContext().getExternalFilesDir(DIRECTORY_PICTURES), TAG);
             if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
                 Log.d(TAG, "failed to create directory");
             }
-            String destinationFilename = mediaStorageDir.getPath() + File.separator + PHOTO_FILENAME;
-            try (FileOutputStream out = new FileOutputStream(destinationFilename)) {
-                selectedImage.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
-                // PNG is a lossless format, the compression factor (100) is ignored
+            String destinationFilename =
+                    mediaStorageDir.getPath() + File.separator + PHOTO_FILENAME;
+            try (FileOutputStream out = new FileOutputStream(
+                    destinationFilename)) {
+                selectedImage.compress(Bitmap.CompressFormat.PNG, 100, out);
             } catch (IOException e) {
                 e.printStackTrace();
             }
             photoFile = new File(destinationFilename);
-            // Load the selected image into a preview
             ivPostImage.setImageBitmap(selectedImage);
         }
     }
@@ -211,7 +176,8 @@ public class ComposeFragment extends Fragment implements
         newPost.setDescription(etDescription.getText().toString());
         newPost.setTitle(etTitle.getText().toString());
         newPost.setMedia(new ParseFile(photoFile));
-        ParseRelation<Community> userCommunities = newPost.getRelation("postedTo");
+        ParseRelation<Community> userCommunities =
+                newPost.getRelation("postedTo");
         for (Community community : selectedCommunities) {
             userCommunities.add(community);
         }
@@ -220,9 +186,11 @@ public class ComposeFragment extends Fragment implements
             public void done(ParseException e) {
                 if (e != null) {
                     Log.e(TAG, "Error while saving", e);
-                    Toast.makeText(getContext(), "Error while saving", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Error while saving",
+                            Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getContext(), "Post uploaded!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Post uploaded!",
+                            Toast.LENGTH_SHORT).show();
                     etDescription.setText("");
                     etTitle.setText("");
                     ivPostImage.setImageResource(R.drawable.ic_add_box_24px);
@@ -238,8 +206,9 @@ public class ComposeFragment extends Fragment implements
         // directories.
         // This way, we don't need to request external read/write runtime
         // permissions.
-        File mediaStorageDir = new File(getContext()
-                .getExternalFilesDir(DIRECTORY_PICTURES), TAG);
+        File mediaStorageDir =
+                new File(getContext().getExternalFilesDir(DIRECTORY_PICTURES),
+                        TAG);
         if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
             Log.d(TAG, "failed to create directory");
         }
@@ -284,33 +253,75 @@ public class ComposeFragment extends Fragment implements
     }
 
     private void setAvailableCommunities() {
-        ParseRelation<Community> communityParseRelation = ParseUser.getCurrentUser().getRelation("communities");
-        communityParseRelation.getQuery().findInBackground(new FindCallback<Community>() {
-            @Override
-            public void done(List<Community> objects, ParseException e) {
-                if (e != null) {
-                    //TODO: Handle this
-                    return;
-                }
-                else {
-                    List<String> communityNames = new ArrayList<>();
-                    for(Community community : objects) {
-                        userCommunities.put(community.getName(), community);
-                        communityNames.add(community.getName());
+        ParseRelation<Community> communityParseRelation =
+                ParseUser.getCurrentUser().getRelation("communities");
+        communityParseRelation.getQuery()
+                .findInBackground(new FindCallback<Community>() {
+                    @Override
+                    public void done(List<Community> objects,
+                                     ParseException e) {
+                        if (e != null) {
+                            //TODO: Handle this
+                            return;
+                        } else {
+                            List<String> communityNames = new ArrayList<>();
+                            for (Community community : objects) {
+                                userCommunities
+                                        .put(community.getName(), community);
+                                communityNames.add(community.getName());
+                            }
+                            msCommunity.setAdapterWithOutImage(getContext(),
+                                    communityNames, ComposeFragment.this);
+                            msCommunity.initMultiSpinner(getContext(),
+                                    msCommunity);
+                        }
                     }
-                    msCommunity.setAdapterWithOutImage(getContext(),communityNames, ComposeFragment.this);
-                    msCommunity.initMultiSpinner(getContext(),msCommunity);
-                }
-            }
-        });
+                });
     }
 
     @Override
     public void OnMultiSpinnerItemSelected(List<String> chosenItems) {
         selectedCommunities = new ArrayList<>();
-        for(String communityName : chosenItems) {
+        for (String communityName : chosenItems) {
             selectedCommunities.add(userCommunities.get(communityName));
             Log.i("ComposeFragment", "selected: " + communityName);
         }
     }
+
+    public Bitmap rotateBitmapOrientation(String photoFilePath) {
+        // Create and configure BitmapFactory
+        BitmapFactory.Options bounds = new BitmapFactory.Options();
+        bounds.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(photoFilePath, bounds);
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        Bitmap bm = BitmapFactory.decodeFile(photoFilePath, opts);
+        // Read EXIF Data
+        ExifInterface exif = null;
+        try {
+            exif = new ExifInterface(photoFilePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String orientString = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
+        int orientation =
+                orientString != null ? Integer.parseInt(orientString) :
+                        ExifInterface.ORIENTATION_NORMAL;
+        int rotationAngle = 0;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_90)
+            rotationAngle = 90;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_180)
+            rotationAngle = 180;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_270)
+            rotationAngle = 270;
+        // Rotate Bitmap
+        Matrix matrix = new Matrix();
+        matrix.setRotate(rotationAngle, (float) bm.getWidth() / 2,
+                (float) bm.getHeight() / 2);
+        Bitmap rotatedBitmap =
+                Bitmap.createBitmap(bm, 0, 0, bounds.outWidth, bounds.outHeight,
+                        matrix, true);
+        // Return result
+        return rotatedBitmap;
+    }
+
 }
