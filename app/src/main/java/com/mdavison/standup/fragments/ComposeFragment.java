@@ -23,20 +23,38 @@ import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
+import com.anurag.multiselectionspinner.MultiSelectionSpinnerDialog;
+import com.anurag.multiselectionspinner.MultiSpinner;
 import com.mdavison.standup.R;
+import com.mdavison.standup.models.Community;
+import com.mdavison.standup.models.Post;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseRelation;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
+import static android.os.Environment.DIRECTORY_PICTURES;
 
 
 /**
  * This Fragment implements the Compose user story, allowing the user to
  * create and upload posts.
  */
-public class ComposeFragment extends Fragment {
+public class ComposeFragment extends Fragment implements
+        MultiSelectionSpinnerDialog.OnMultiSpinnerSelectionListener {
 
     public final static int PICK_PHOTO_CODE = 8;
     private static final String TAG = "ComposeFragment";
@@ -44,8 +62,11 @@ public class ComposeFragment extends Fragment {
     private static final String PHOTO_FILENAME = "photo.jpg";
     private File photoFile;
     private ImageView ivPostImage;
-    private ParseUser currentUser;
-
+    private EditText etTitle;
+    private EditText etDescription;
+    private MultiSpinner msCommunity;
+    private HashMap<String, Community> userCommunities;
+    private List<Community> selectedCommunities;
     public ComposeFragment() {
         // Required empty public constructor
     }
@@ -62,13 +83,13 @@ public class ComposeFragment extends Fragment {
                               @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final EditText etTitle = view.findViewById(R.id.etTitle);
-        final EditText etDescription = view.findViewById(R.id.etDescription);
+        etTitle = view.findViewById(R.id.etTitle);
+        etDescription = view.findViewById(R.id.etDescription);
         final Button btnCaptureImage = view.findViewById(R.id.btnCaptureImage);
         ivPostImage = view.findViewById(R.id.ivPostImage);
         final Button btnSubmit = view.findViewById(R.id.btnSubmit);
         final Button btnSelectImage = view.findViewById(R.id.btnSelectImage);
-        currentUser = ParseUser.getCurrentUser();
+        msCommunity = view.findViewById(R.id.msCommunity);
         btnSelectImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -99,6 +120,8 @@ public class ComposeFragment extends Fragment {
                 savePost();
             }
         });
+        userCommunities = new HashMap<>();
+        setAvailableCommunities();
     }
 
     @Override
@@ -119,10 +142,50 @@ public class ComposeFragment extends Fragment {
         }
         if (requestCode == PICK_PHOTO_CODE && data != null) {
             Uri photoUri = data.getData();
+            /*
+            File mediaStorageDir = new File(getContext()
+                    .getExternalFilesDir(DIRECTORY_PICTURES), TAG);
 
-            // Load the image located at photoUri into selectedImage
+            if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
+                Log.d(TAG, "failed to create directory");
+            }
+            String destinationFilename = mediaStorageDir.getPath() + File.separator + PHOTO_FILENAME;
+            BufferedInputStream bis = null;
+            BufferedOutputStream bos = null;
+            try {
+                bis = new BufferedInputStream(new FileInputStream(photoUri.getPath()));
+                bos = new BufferedOutputStream(new FileOutputStream(destinationFilename, false));
+                byte[] buf = new byte[1024];
+                bis.read(buf);
+                do {
+                    bos.write(buf);
+                } while(bis.read(buf) != -1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (bis != null) bis.close();
+                    if (bos != null) bos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            */
             Bitmap selectedImage = loadFromUri(photoUri);
+            File mediaStorageDir = new File(getContext()
+                    .getExternalFilesDir(DIRECTORY_PICTURES), TAG);
 
+            if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
+                Log.d(TAG, "failed to create directory");
+            }
+            String destinationFilename = mediaStorageDir.getPath() + File.separator + PHOTO_FILENAME;
+            try (FileOutputStream out = new FileOutputStream(destinationFilename)) {
+                selectedImage.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
+                // PNG is a lossless format, the compression factor (100) is ignored
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            photoFile = new File(destinationFilename);
             // Load the selected image into a preview
             ivPostImage.setImageBitmap(selectedImage);
         }
@@ -141,6 +204,31 @@ public class ComposeFragment extends Fragment {
 
     private void savePost() {
         //save the post to Parse
+        //create the post
+        //for each selectedCommunity add the post to its post relation and save
+        Post newPost = new Post();
+        newPost.setAuthor(ParseUser.getCurrentUser());
+        newPost.setDescription(etDescription.getText().toString());
+        newPost.setTitle(etTitle.getText().toString());
+        newPost.setMedia(new ParseFile(photoFile));
+        ParseRelation<Community> userCommunities = newPost.getRelation("postedTo");
+        for (Community community : selectedCommunities) {
+            userCommunities.add(community);
+        }
+        newPost.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Error while saving", e);
+                    Toast.makeText(getContext(), "Error while saving", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "Post uploaded!", Toast.LENGTH_SHORT).show();
+                    etDescription.setText("");
+                    etTitle.setText("");
+                    ivPostImage.setImageResource(R.drawable.ic_add_box_24px);
+                }
+            }
+        });
     }
 
     // Returns the File for a photo stored on disk given the fileName
@@ -151,27 +239,13 @@ public class ComposeFragment extends Fragment {
         // This way, we don't need to request external read/write runtime
         // permissions.
         File mediaStorageDir = new File(getContext()
-                .getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
+                .getExternalFilesDir(DIRECTORY_PICTURES), TAG);
         if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
             Log.d(TAG, "failed to create directory");
         }
         return new File(mediaStorageDir.getPath() + File.separator + fileName);
     }
 
-    // Trigger gallery selection for a photo
-    public void onPickPhoto() {
-        // Create intent for picking a photo from the gallery
-        Intent intent = new Intent(Intent.ACTION_PICK,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-        // If you call startActivityForResult() using an intent that no app
-        // can handle, your app will crash.
-        // So as long as the result is not null, it's safe to use the intent.
-        if (intent.resolveActivity(getContext().getPackageManager()) != null) {
-            // Bring up gallery to select a photo
-            startActivityForResult(intent, PICK_PHOTO_CODE);
-        }
-    }
 
     public Bitmap loadFromUri(Uri photoUri) {
         Bitmap image = null;
@@ -192,5 +266,51 @@ public class ComposeFragment extends Fragment {
             e.printStackTrace();
         }
         return image;
+    }
+
+    // Trigger gallery selection for a photo
+    public void onPickPhoto() {
+        // Create intent for picking a photo from the gallery
+        Intent intent = new Intent(Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+        // If you call startActivityForResult() using an intent that no app
+        // can handle, your app will crash.
+        // So as long as the result is not null, it's safe to use the intent.
+        if (intent.resolveActivity(getContext().getPackageManager()) != null) {
+            // Bring up gallery to select a photo
+            startActivityForResult(intent, PICK_PHOTO_CODE);
+        }
+    }
+
+    private void setAvailableCommunities() {
+        ParseRelation<Community> communityParseRelation = ParseUser.getCurrentUser().getRelation("communities");
+        communityParseRelation.getQuery().findInBackground(new FindCallback<Community>() {
+            @Override
+            public void done(List<Community> objects, ParseException e) {
+                if (e != null) {
+                    //TODO: Handle this
+                    return;
+                }
+                else {
+                    List<String> communityNames = new ArrayList<>();
+                    for(Community community : objects) {
+                        userCommunities.put(community.getName(), community);
+                        communityNames.add(community.getName());
+                    }
+                    msCommunity.setAdapterWithOutImage(getContext(),communityNames, ComposeFragment.this);
+                    msCommunity.initMultiSpinner(getContext(),msCommunity);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void OnMultiSpinnerItemSelected(List<String> chosenItems) {
+        selectedCommunities = new ArrayList<>();
+        for(String communityName : chosenItems) {
+            selectedCommunities.add(userCommunities.get(communityName));
+            Log.i("ComposeFragment", "selected: " + communityName);
+        }
     }
 }

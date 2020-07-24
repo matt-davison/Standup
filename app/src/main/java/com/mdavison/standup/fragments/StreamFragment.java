@@ -270,7 +270,7 @@ public class StreamFragment extends Fragment {
     }
 
     private void setPost(Post post, CardView postView) {
-
+        if (getContext() == null) {return;}
         TextView tvTitle = postView.findViewById(R.id.tvTitle);
         TextView tvAuthor = postView.findViewById(R.id.tvAuthor);
         ImageView ivMedia = postView.findViewById(R.id.ivMedia);

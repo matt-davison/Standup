@@ -29,4 +29,6 @@ public class Community extends ParseObject {
     public void setDescription(String description) {
         put(KEY_DESCRIPTION, description);
     }
+
+    public String getName() { return getString(KEY_NAME); }
 }

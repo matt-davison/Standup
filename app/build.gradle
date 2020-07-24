@@ -95,4 +95,5 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:${recyclerViewVersion}"
     implementation 'com.github.parse-community.Parse-SDK-Android:parse:1.24.2'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.8.1'
+    implementation 'com.github.AnuraganuPunalur:Multi-Selection-Spinner-Android:1.0'
 }

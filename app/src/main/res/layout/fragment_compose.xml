@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -22,7 +23,7 @@
         android:layout_height="200dp"
         android:layout_below="@+id/etTitle"
         android:layout_marginTop="0dp"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:srcCompat="@drawable/ic_add_box_24px" />
 
     <LinearLayout
         android:id="@+id/llContentSource"
@@ -56,13 +57,19 @@
         android:hint="Description..."
         android:textSize="18sp" />
 
+    <com.anurag.multiselectionspinner.MultiSpinner
+        android:id="@+id/msCommunity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etDescription"
+        android:layout_marginTop="0dp" />
+
     <Button
         android:id="@+id/btnSubmit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/etDescription"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="238dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="0dp"
         android:text="Create Post" />
 
 </RelativeLayout>
