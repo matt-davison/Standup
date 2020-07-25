@@ -49,7 +49,7 @@ import static android.os.Environment.DIRECTORY_PICTURES;
 
 /**
  * This Fragment implements the Compose user story, allowing the user to
- * create and upload posts.
+ * create, edit, and upload posts.
  */
 public class ComposeFragment extends Fragment
         implements MultiSelectionSpinnerDialog.OnMultiSpinnerSelectionListener {
@@ -181,26 +181,23 @@ public class ComposeFragment extends Fragment
         for (Community community : selectedCommunities) {
             userCommunities.add(community);
         }
-        newPost.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Error while saving", e);
-                    Toast.makeText(getContext(), "Error while saving",
-                            Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getContext(), "Post uploaded!",
-                            Toast.LENGTH_SHORT).show();
-                    etDescription.setText("");
-                    etTitle.setText("");
-                    ivPostImage.setImageResource(R.drawable.ic_add_box_24px);
-                }
+        newPost.saveInBackground(parseException -> {
+            if (parseException != null) {
+                Log.e(TAG, "Error while saving", parseException);
+                Toast.makeText(getContext(), "Error while saving",
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), "Post uploaded!",
+                        Toast.LENGTH_SHORT).show();
+                etDescription.setText("");
+                etTitle.setText("");
+                ivPostImage.setImageResource(R.drawable.ic_add_box_24px);
             }
         });
     }
 
     // Returns the File for a photo stored on disk given the fileName
-    public File getPhotoFileUri(String fileName) {
+    private File getPhotoFileUri(String fileName) {
         // Get safe storage directory for photos
         // Use `getExternalFilesDir` on Context to access package-specific
         // directories.
@@ -216,7 +213,7 @@ public class ComposeFragment extends Fragment
     }
 
 
-    public Bitmap loadFromUri(Uri photoUri) {
+    private Bitmap loadFromUri(Uri photoUri) {
         Bitmap image = null;
         try {
             // check version of Android on device
@@ -238,7 +235,7 @@ public class ComposeFragment extends Fragment
     }
 
     // Trigger gallery selection for a photo
-    public void onPickPhoto() {
+    private void onPickPhoto() {
         // Create intent for picking a photo from the gallery
         Intent intent = new Intent(Intent.ACTION_PICK,
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -262,7 +259,7 @@ public class ComposeFragment extends Fragment
                                      ParseException e) {
                         if (e != null) {
                             //TODO: Handle this
-                            return;
+                            Log.i(TAG, "Error getting available communities");
                         } else {
                             List<String> communityNames = new ArrayList<>();
                             for (Community community : objects) {
@@ -284,11 +281,10 @@ public class ComposeFragment extends Fragment
         selectedCommunities = new ArrayList<>();
         for (String communityName : chosenItems) {
             selectedCommunities.add(userCommunities.get(communityName));
-            Log.i("ComposeFragment", "selected: " + communityName);
         }
     }
 
-    public Bitmap rotateBitmapOrientation(String photoFilePath) {
+    private Bitmap rotateBitmapOrientation(String photoFilePath) {
         // Create and configure BitmapFactory
         BitmapFactory.Options bounds = new BitmapFactory.Options();
         bounds.inJustDecodeBounds = true;
@@ -317,11 +313,9 @@ public class ComposeFragment extends Fragment
         Matrix matrix = new Matrix();
         matrix.setRotate(rotationAngle, (float) bm.getWidth() / 2,
                 (float) bm.getHeight() / 2);
-        Bitmap rotatedBitmap =
-                Bitmap.createBitmap(bm, 0, 0, bounds.outWidth, bounds.outHeight,
-                        matrix, true);
         // Return result
-        return rotatedBitmap;
+        return Bitmap.createBitmap(bm, 0, 0, bounds.outWidth, bounds.outHeight,
+                matrix, true);
     }
 
 }
