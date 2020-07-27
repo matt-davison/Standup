@@ -6,16 +6,16 @@ keyProperties.load(new FileInputStream(keyPropertiesFile))
 
 // Apply the PESDKPlugin
 //TODO: Not finding license in app/src/main/assets/LICENSE
-//apply plugin: 'ly.img.android.sdk'
+apply plugin: 'ly.img.android.sdk'
 // Configure the PESDKPlugin
 // Apply Kotlin Plugin
 apply plugin: 'kotlin-android'
-/*
+
 imglyConfig {
 
     pesdk {
         enabled true
-        licencePath 'pesdk_android_license.dms'
+        licencePath 'LICENSE'
     }
 
     // Define the modules you are need
@@ -47,7 +47,6 @@ imglyConfig {
         include 'assets:sticker-emoticons'
     }
 }
- */
 
 android {
     compileSdkVersion 30

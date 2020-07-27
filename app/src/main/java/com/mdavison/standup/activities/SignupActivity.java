@@ -29,14 +29,14 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        final EditText etUsername = findViewById(R.id.etUsername);
-        final EditText etPassword = findViewById(R.id.etPassword);
-        final EditText etEmail = findViewById(R.id.etEmail);
         final Button btnCreate = findViewById(R.id.btnCreate);
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ParseUser user = new ParseUser();
+                final EditText etUsername = findViewById(R.id.etUsername);
+                final EditText etPassword = findViewById(R.id.etPassword);
+                final EditText etEmail = findViewById(R.id.etEmail);
                 final String username = etUsername.getText().toString();
                 user.setUsername(username);
                 final String password = etPassword.getText().toString();
@@ -53,6 +53,14 @@ public class SignupActivity extends AppCompatActivity {
                                             if (e != null) {
                                                 Log.e(TAG, "Issue with login",
                                                         e);
+                                                Toast.makeText(
+                                                        SignupActivity.this,
+                                                        "Issue with creating " +
+                                                                "account, " +
+                                                                "please try " +
+                                                                "again.",
+                                                        Toast.LENGTH_LONG)
+                                                        .show();
                                                 return;
                                             }
                                             Intent i = new Intent(
@@ -63,7 +71,7 @@ public class SignupActivity extends AppCompatActivity {
                                     });
                         } else {
                             Toast.makeText(SignupActivity.this,
-                                    "Error while " + "creating account!",
+                                    "Error while creating account!",
                                     Toast.LENGTH_LONG).show();
                             Log.e(TAG, "Error while creating account", e);
                         }

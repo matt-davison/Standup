@@ -20,6 +20,10 @@ Standup is a platform that allows its users to moderate the content they see. Ju
    - **Habit**: Users will open this app many times in a day- content is very short and when using the "hot" sort only the best new content will be shown. They will also be able to post their own microblog content. The average user will mostly consume but probably create at least once a week.
    - **Scope**: This app will be challenging but it is probably possible to build by the end. A stripped down version would still be entertaining.
 
+### Walkthrough
+![Video Walthrough](https://github.com/matt-davison/Standup/blob/master/Kapture.gif)
+GIF created with [Kap](https://getkap.co/).
+
 ## Product Spec
 
 ### 1. User Stories (Required and Optional)

@@ -15,6 +15,10 @@ import com.mdavison.standup.fragments.ExploreFragment;
 import com.mdavison.standup.fragments.ProfileFragment;
 import com.mdavison.standup.fragments.StreamFragment;
 
+/**
+ * This Activity implements a BottomNavigationView that allows the user to
+ * navigate between the main user stories.
+ */
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";

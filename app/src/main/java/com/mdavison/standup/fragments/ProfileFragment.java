@@ -13,7 +13,9 @@ import androidx.fragment.app.Fragment;
 import com.mdavison.standup.R;
 import com.parse.ParseUser;
 
-
+/**
+ * This Fragment shows details about a user.
+ */
 public class ProfileFragment extends Fragment {
 
     public ProfileFragment() {
@@ -31,7 +33,7 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view,
                               @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ImageView ivLogout = view.findViewById(R.id.ivLogout);
+        final ImageView ivLogout = view.findViewById(R.id.ivLogout);
         ivLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -37,8 +37,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import static android.widget.Toast.makeText;
-
 /**
  * This Fragment displays a stream of posts to the user.
  */
@@ -173,7 +171,7 @@ public class StreamFragment extends Fragment {
     private void advancePost() {
         if (posts.size() <= 2) {
             Log.e(TAG, "Not enough posts to advance");
-            makeText(getContext(), "Need more posts!", Toast.LENGTH_LONG)
+            Toast.makeText(getContext(), "Need more posts!", Toast.LENGTH_LONG)
                     .show();
             //queryPosts(); TODO: test this more!
             return;
@@ -188,7 +186,7 @@ public class StreamFragment extends Fragment {
     private void setPosts() {
         if (posts.size() <= 1) {
             Log.e(TAG, "Not enough posts");
-            makeText(getContext(), "Last Post", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "Last Post", Toast.LENGTH_LONG).show();
             setPost(posts.get(0), postFront);
             return;
         }
@@ -210,7 +208,7 @@ public class StreamFragment extends Fragment {
                 comments.addAll(results);
                 for (int i = 0; i < results.size(); i++) {
                     View comment = LayoutInflater.from(getContext())
-                            .inflate(R.layout.item_comment, llComments);
+                            .inflate(R.layout.item_comment, null);
                     try {
                         ((TextView) comment.findViewById(R.id.tvAuthor))
                                 .setText(comments.get(i).getAuthor()
@@ -233,7 +231,6 @@ public class StreamFragment extends Fragment {
         if (getContext() == null) {
             return;
         }
-        // Sahil: How big of a performance hit is this?
         TextView tvTitle = postView.findViewById(R.id.tvTitle);
         TextView tvAuthor = postView.findViewById(R.id.tvAuthor);
         ImageView ivMedia = postView.findViewById(R.id.ivMedia);
@@ -266,13 +263,13 @@ public class StreamFragment extends Fragment {
         communitiesRelation.getQuery().findInBackground((communities, e) -> {
             if (e != null) {
                 Log.e(TAG, "Issues with getting communities", e);
-                makeText(getContext(), "Issue getting communities",
+                Toast.makeText(getContext(), "Issue getting communities",
                         Toast.LENGTH_SHORT).show();
                 return;
             }
             if (communities.size() == 0) {
                 Log.e(TAG, "Not following any communities");
-                makeText(getContext(), "Not following any communities",
+                Toast.makeText(getContext(), "Not following any communities",
                         Toast.LENGTH_LONG).show();
                 return;
             }
@@ -291,7 +288,7 @@ public class StreamFragment extends Fragment {
             query.findInBackground((newPosts, e1) -> {
                 if (e1 != null) {
                     Log.e(TAG, "Issue with getting posts", e1);
-                    makeText(getContext(), "Issue getting posts",
+                    Toast.makeText(getContext(), "Issue getting posts",
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
