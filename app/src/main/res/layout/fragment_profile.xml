@@ -16,8 +16,8 @@
             android:layout_height="100dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:scaleType="centerCrop"
             app:srcCompat="@drawable/ic_account_box_24px" />
 
@@ -25,7 +25,7 @@
             android:id="@+id/tvUsername"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
+            android:layout_alignTop="@+id/ivProfile"
             android:layout_marginStart="5dp"
             android:layout_marginTop="0dp"
             android:layout_toEndOf="@id/ivProfile"
@@ -39,7 +39,7 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/ivProfile"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="36dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="0dp" />
 
         <TextView

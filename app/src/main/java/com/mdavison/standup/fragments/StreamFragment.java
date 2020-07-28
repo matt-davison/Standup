@@ -285,9 +285,9 @@ public class StreamFragment extends Fragment {
             query.setLimit(20);
             query.setSkip(postsRetrieved);
             query.addDescendingOrder(Post.KEY_CREATED);
-            query.findInBackground((newPosts, e1) -> {
-                if (e1 != null) {
-                    Log.e(TAG, "Issue with getting posts", e1);
+            query.findInBackground((newPosts, error) -> {
+                if (error != null) {
+                    Log.e(TAG, "Issue with getting posts", error);
                     Toast.makeText(getContext(), "Issue getting posts",
                             Toast.LENGTH_SHORT).show();
                     return;
