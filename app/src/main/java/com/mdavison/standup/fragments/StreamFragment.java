@@ -185,8 +185,7 @@ public class StreamFragment extends Fragment {
 
     private void setPosts() {
         if (posts.size() <= 1) {
-            Log.e(TAG, "Not enough posts");
-            Toast.makeText(getContext(), "Last Post", Toast.LENGTH_LONG).show();
+            Log.i(TAG, "Not enough posts");
             setPost(posts.get(0), postFront);
             return;
         }

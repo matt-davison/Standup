@@ -5,63 +5,68 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="8dp"
-    tools:context=".fragments.ExploreFragment" >
+    tools:context=".fragments.ExploreFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
         <EditText
             android:id="@+id/etSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/llMenu"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="0dp"
+            android:layout_toStartOf="@+id/imageButton"
+            android:hint="Search..." />
+
+        <LinearLayout
+            android:id="@+id/llMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginStart="0dp"
             android:layout_marginTop="0dp"
-            android:layout_marginEnd="0dp"
-            android:hint="Search..." />
+            android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/ivSearchPost"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            <ToggleButton
+                android:id="@+id/tbtnPosts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textOff="Posts"
+                android:textOn="Posts" />
+
+            <ToggleButton
+                android:id="@+id/tbtnCommunities"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:textOff="Communities"
+                android:textOn="Communities" />
+
+            <ToggleButton
+                android:id="@+id/tbtnUsers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textOff="Users"
+                android:textOn="Users" />
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvContent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_below="@+id/etSearch"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="0dp"
-            android:background="@android:color/holo_green_dark"
-            android:src="@drawable/ic_search_24px" />
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="0dp" />
 
-        <ImageView
-            android:id="@+id/ivSearchUser"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_below="@+id/etSearch"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="0dp"
-            android:layout_toEndOf="@+id/ivSearchPost"
-            android:background="@android:color/holo_red_dark"
-            android:src="@drawable/ic_search_24px" />
-
-        <ImageView
-            android:id="@+id/ivSearchCommunity"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_below="@+id/etSearch"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="0dp"
-            android:layout_toEndOf="@+id/ivSearchUser"
-            android:background="@android:color/holo_blue_dark"
-            android:src="@drawable/ic_search_24px" />
-
-        <include
-            android:id="@+id/post"
-            layout="@layout/item_post"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/ivSearchPost"
-            android:layout_marginTop="20dp" />
     </RelativeLayout>
 
 

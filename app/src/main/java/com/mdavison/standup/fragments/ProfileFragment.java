@@ -31,7 +31,6 @@ import com.mdavison.standup.support.ImageHelp;
 import com.mdavison.standup.support.ItemClickSupport;
 import com.mdavison.standup.support.RequestCodes;
 import com.parse.ParseFile;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
