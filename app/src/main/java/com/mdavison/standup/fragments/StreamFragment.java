@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +35,7 @@ import com.parse.ParseRelation;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -50,7 +52,6 @@ public class StreamFragment extends Fragment {
     private CardView postDetail;
     private LinearLayout llComments;
     private ParseUser currentUser;
-    private int postsViewed = 0;
     private int postsRetrieved = 0;
 
     public StreamFragment() {
@@ -164,16 +165,17 @@ public class StreamFragment extends Fragment {
             return;
         }
         posts.get(0).addViewer(currentUser);
-        postsViewed++;
         advancePost();
     }
 
     private void advancePost() {
+        if (posts.size() <= 5) {
+            queryPosts();
+        }
         if (posts.size() <= 2) {
             Log.e(TAG, "Not enough posts to advance");
             Toast.makeText(getContext(), "Need more posts!", Toast.LENGTH_LONG)
                     .show();
-            //TODO: handle low posts (queryMore)
             return;
         }
         posts.remove(0);
@@ -214,7 +216,6 @@ public class StreamFragment extends Fragment {
                     }
                     ((TextView) comment.findViewById(R.id.tvComment))
                             .setText(comments.get(i).getComment());
-                    //TODO: Set date!
                     llComments.addView(comment,
                             comments.size() - results.size() + i);
                 }
@@ -232,28 +233,34 @@ public class StreamFragment extends Fragment {
         ImageView ivMedia = postView.findViewById(R.id.ivMedia);
         TextView tvDescription = postView.findViewById(R.id.tvDescription);
 
-        //TODO: Set Date!
         tvTitle.setText(post.getTitle());
         if (post.getDescription() != null) {
             tvDescription.setText(post.getDescription());
+        } else {
+            tvDescription.setText("");
         }
         if (post.getMedia() != null) {
-            Glide.with(getContext()).load(post.getMedia().getUrl()).fitCenter()
+            Glide.with(getContext()).load(post.getMedia().getUrl()).centerCrop()
                     .into(ivMedia);
         } else {
             Glide.with(getContext()).clear(ivMedia);
+            ivMedia.setImageResource(0);
         }
-        //TODO: Change fetchIfNeeded to query.include(ptr to author) to
-        // reduce queries
         try {
             tvAuthor.setText((post.getAuthor().fetchIfNeeded()).getUsername());
         } catch (ParseException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Unable to fetch author");
         }
+
+        final TextView tvRelativeCreation = postView.findViewById(R.id.tvRelativeCreation);
+        final long now = new Date().getTime();
+        String relativeDate = DateUtils
+                .getRelativeTimeSpanString(post.getCreatedAt().getTime(),
+                        now, DateUtils.SECOND_IN_MILLIS).toString();
+        tvRelativeCreation.setText(relativeDate);
     }
 
     private void queryPosts() {
-        //TODO: Generate list of communities on fragment opening and reuse
         ParseRelation<Community> communitiesRelation =
                 currentUser.getRelation(User.KEY_COMMUNITIES);
         communitiesRelation.getQuery().findInBackground((communities, e) -> {
@@ -278,7 +285,7 @@ public class StreamFragment extends Fragment {
                 queries.add(fromCommunity);
             }
             ParseQuery<Post> query = ParseQuery.or(queries);
-            query.setLimit(20);
+            query.setLimit(10);
             query.setSkip(postsRetrieved);
             query.addDescendingOrder(Post.KEY_CREATED);
             query.findInBackground((newPosts, error) -> {
@@ -289,11 +296,11 @@ public class StreamFragment extends Fragment {
                     return;
                 }
                 posts.addAll(newPosts);
-                Log.i(TAG, "Received " + newPosts.size() + " posts");
-                postsRetrieved += newPosts.size();
-                if (postsViewed == 0) {
+                if (postsRetrieved == 0) {
                     setPosts();
                 }
+                postsRetrieved += newPosts.size();
+
             });
         });
     }

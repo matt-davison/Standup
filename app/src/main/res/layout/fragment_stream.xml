@@ -10,7 +10,6 @@
         layout="@layout/item_post"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
         android:layout_centerInParent="true" />
 
     <include
@@ -18,7 +17,6 @@
         layout="@layout/item_post"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
         android:layout_centerInParent="true" />
 
     <include
@@ -26,7 +24,6 @@
         layout="@layout/item_post_detail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
         android:visibility="gone" />
 
 </RelativeLayout>
