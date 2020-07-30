@@ -71,7 +71,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         private ImageView ivMedia;
         private TextView tvDescription;
         private TextView tvRelativeCreation;
-        private ImageView ivProfile;
         private TextView tvTitle;
 
         public ViewHolder(@NonNull View itemView) {
@@ -80,7 +79,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             ivMedia = itemView.findViewById(R.id.ivMedia);
             tvDescription = itemView.findViewById(R.id.tvDescription);
             tvRelativeCreation = itemView.findViewById(R.id.tvRelativeCreation);
-            ivProfile = itemView.findViewById(R.id.ivProfile);
             tvTitle = itemView.findViewById(R.id.tvTitle);
         }
 
@@ -96,11 +94,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             ParseFile image = post.getMedia();
             if (image != null) {
                 Glide.with(context).load(image.getUrl()).into(ivMedia);
-            }
-            ParseFile profileImage =
-                    (ParseFile) post.getAuthor().get("picture");
-            if (profileImage != null) {
-                Glide.with(context).load(profileImage.getUrl()).into(ivProfile);
             }
             long now = new Date().getTime();
             String relativeDate = DateUtils

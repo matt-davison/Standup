@@ -173,11 +173,8 @@ public class StreamFragment extends Fragment {
             Log.e(TAG, "Not enough posts to advance");
             Toast.makeText(getContext(), "Need more posts!", Toast.LENGTH_LONG)
                     .show();
-            //queryPosts(); TODO: test this more!
+            //TODO: handle low posts (queryMore)
             return;
-        }
-        if (posts.size() < 5) {
-            //queryPosts(); TODO: test this more!
         }
         posts.remove(0);
         setPosts();
@@ -300,54 +297,4 @@ public class StreamFragment extends Fragment {
             });
         });
     }
-
-
-    //TODO: Might be of user later... will leave for now
-    /*
-    private void queryMoreComments(Comment comment) {
-        ParseRelation<Comment> commentRelation =
-                posts.get(0).getRelation(Post.KEY_COMMENTS);
-        ParseQuery<Comment> query = commentRelation.getQuery();
-        query.addDescendingOrder(Comment.KEY_LIKES);
-        query.setLimit(20);
-        query.setSkip(comments.size());
-        query.findInBackground((results, e) -> {
-            if (e != null) {
-                Log.e(TAG, "Issue with getting comments", e);
-                makeText(getContext(), "Issue getting comments",
-                        Toast.LENGTH_SHORT).show();
-                return;
-            } else {
-                Log.i(TAG, "Received " + results.size() + " comments");
-                comments.addAll(results);
-            }
-        });
-    }
-
-    private void querySubComments(Comment comment) {
-        ParseRelation<Comment> subComments =
-                comment.getRelation(Comment.KEY_SUB_COMMENTS);
-        ParseQuery<Comment> query = subComments.getQuery();
-        query.setLimit(20);
-        query.addDescendingOrder(Comment.KEY_LIKES);
-        query.findInBackground(new FindCallback<Comment>() {
-            @Override
-            public void done(List<Comment> comments, ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Issue with getting comments", e);
-                    makeText(getContext(), "Issue getting comments",
-                            Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                comments.clear();
-                comments.addAll(comments);
-                Log.i(TAG, "Received " + comments.size() + " comments");
-                if (postsViewed == 0) {
-                    setPosts();
-                }
-            }
-        });
-    }
-     */
-
 }

@@ -151,7 +151,6 @@ public class ProfileFragment extends Fragment {
             query.setLimit(20);
             query.setSkip(userPosts.size());
             query.addDescendingOrder(Post.KEY_CREATED);
-            //query.include(Post.KEY_AUTHOR);
             query.findInBackground((newPosts, error) -> {
                 if (error != null) {
                     Log.e(TAG, "Issue with getting posts", error);

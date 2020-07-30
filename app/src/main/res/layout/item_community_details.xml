@@ -1,63 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ImageView
-        android:id="@+id/ivBanner"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="243dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="2dp"
-        tools:srcCompat="@tools:sample/backgrounds/scenic" />
+        android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvPosts"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/tvName"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="16dp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tvName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ivBanner"
-        android:layout_marginTop="0dp"
-        android:text="Community Name"
-        android:textColor="@android:color/primary_text_light"
-        android:textSize="24sp" />
+            <ImageView
+                android:id="@+id/ivBanner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="0dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
-    <TextView
-        android:id="@+id/tvUserCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/tvName"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_toEndOf="@+id/tvName"
-        android:text="# Users" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvPosts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvDescription"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="0dp"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <TextView
-        android:id="@+id/tvDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvName"
-        android:text="Community Description" />
+            <TextView
+                android:id="@+id/tvName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ivBanner"
+                android:layout_marginTop="0dp"
+                android:maxLines="2"
+                android:text="Community Name"
+                android:textColor="@android:color/primary_text_light"
+                android:textSize="24sp" />
 
-    <ToggleButton
-        android:id="@+id/tbtnJoin"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_alignTop="@+id/tvName"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="0dp"
-        android:textOff="Follow"
-        android:textOn="Following"
-        android:textSize="14sp" />
+            <TextView
+                android:id="@+id/tvUserCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/tbtnJoin"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="16dp"
+                android:layout_toStartOf="@+id/tbtnJoin"
+                android:text="# Users" />
+
+            <TextView
+                android:id="@+id/tvDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tbtnJoin"
+                android:layout_marginTop="0dp"
+                android:maxLines="4"
+                android:text="Community Description" />
+
+            <ToggleButton
+                android:id="@+id/tbtnJoin"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_below="@+id/tvName"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="16dp"
+                android:textOff="Follow"
+                android:textOn="Following"
+                android:textSize="14sp" />
+        </RelativeLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </RelativeLayout>
