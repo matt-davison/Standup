@@ -20,6 +20,18 @@ Standup is a platform that allows its users to moderate the content they see. Ju
    - **Habit**: Users will open this app many times in a day- content is very short and when using the "hot" sort only the best new content will be shown. They will also be able to post their own microblog content. The average user will mostly consume but probably create at least once a week.
    - **Scope**: This app will be challenging but it is probably possible to build by the end. A stripped down version would still be entertaining.
 
+### App Expectations
+- [x] Your app has multiple views
+- [x] Your app interacts with a database (e.g. Parse)
+- [x] You can log in/log out of your app as a user
+- [x] You can sign up with a new user profile
+- [x] Somewhere in your app you can use the camera to take a picture and do something with the picture (e.g. take a photo and share it to a feed, or take a photo and set a user’s profile picture)
+- [] Your app integrates with a SDK (e.g. Google Maps SDK, Facebook SDK)
+- [] Your app contains at least one more complex algorithm (talk over this with your manager)
+- [x] Your app uses gesture recognizers (e.g. double tap to like, e.g. pinch to scale)
+- [x] Your app use an animation (doesn’t have to be fancy) (e.g. fade in/out, e.g. animating a view growing and shrinking)
+- [] Your app incorporates an external library to add visual polish
+
 ### Walkthrough
 ![Video Walthrough](https://github.com/matt-davison/Standup/blob/master/Kapture.gif)
 GIF created with [Kap](https://getkap.co/).
