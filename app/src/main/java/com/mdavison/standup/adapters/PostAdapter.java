@@ -94,6 +94,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             ParseFile image = post.getMedia();
             if (image != null) {
                 Glide.with(context).load(image.getUrl()).into(ivMedia);
+            } else {
+                Glide.with(context).clear(ivMedia);
             }
             long now = new Date().getTime();
             String relativeDate = DateUtils

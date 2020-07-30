@@ -5,7 +5,7 @@ def keyProperties = new Properties()
 keyProperties.load(new FileInputStream(keyPropertiesFile))
 
 // Apply the PESDKPlugin
-//TODO: Not finding license in app/src/main/assets/LICENSE
+/*
 apply plugin: 'ly.img.android.sdk'
 // Configure the PESDKPlugin
 // Apply Kotlin Plugin
@@ -47,7 +47,7 @@ imglyConfig {
         include 'assets:sticker-emoticons'
     }
 }
-
+*/
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.0"

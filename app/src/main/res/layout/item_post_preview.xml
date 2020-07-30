@@ -47,8 +47,7 @@
                 android:adjustViewBounds="true"
                 android:maxWidth="100dp"
                 android:maxHeight="100dp"
-                android:scaleType="centerCrop"
-                card_view:srcCompat="@drawable/ic_add_box_24px" />
+                android:scaleType="centerCrop" />
         </RelativeLayout>
 
         <TextView

@@ -29,7 +29,16 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         if (ParseUser.getCurrentUser() != null) {
-            goMainActivity();
+            try {
+                ParseUser.getCurrentUser().fetch();
+                goMainActivity();
+            } catch (ParseException e) {
+                Log.e(TAG, "Unable to fetch current user");
+                Toast.makeText(this,
+                        "Unable to fetch current user, please try logging in " +
+                                "again",
+                        Toast.LENGTH_LONG).show();
+            }
         }
 
         final Button btnLogin = findViewById(R.id.btnLogin);

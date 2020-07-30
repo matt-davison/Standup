@@ -61,7 +61,6 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_profile, container, false);
     }
 
@@ -95,10 +94,11 @@ public class ProfileFragment extends Fragment {
         final TextView tvUsername = view.findViewById(R.id.tvUsername);
         tvUsername.setText(user.getUsername());
         final ImageView ivProfile = view.findViewById(R.id.ivProfile);
-        final ParseFile profileImage =
-                (ParseFile) user.get("picture");
+        ParseFile profileImage = user.getParseFile("picture");
         if (profileImage != null) {
             Glide.with(getContext()).load(profileImage.getUrl()).into(ivProfile);
+        } else {
+            Log.i(TAG, "PROFILE IMAGE IS NULL");
         }
         userPosts = new ArrayList<>();
         final RecyclerView rvPosts = view.findViewById(R.id.rvPosts);
@@ -138,6 +138,8 @@ public class ProfileFragment extends Fragment {
                 Bitmap takenImage = ImageHelp
                         .rotateBitmapOrientation(photoFile.getAbsolutePath());
                 ivProfile.setImageBitmap(takenImage);
+                user.put("picture", new ParseFile(photoFile));
+                user.saveInBackground();
             } else {
                 Toast.makeText(getContext(), "Picture wasn't taken!",
                         Toast.LENGTH_SHORT).show();
