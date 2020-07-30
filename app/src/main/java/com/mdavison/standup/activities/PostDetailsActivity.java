@@ -33,7 +33,7 @@ public class PostDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_details);
 
-        final Post post = Parcels.unwrap(getIntent().getParcelableExtra(Extras.EXTRA_POST));
+        final Post post = (Post) Parcels.unwrap(getIntent().getParcelableExtra(Extras.EXTRA_POST));
 
         final TextView tvTitle = findViewById(R.id.tvTitle);
         tvTitle.setText(post.getTitle());
@@ -56,7 +56,7 @@ public class PostDetailsActivity extends AppCompatActivity {
         }
         final TextView tvRelativeCreation = findViewById(R.id.tvRelativeCreation);
         final long now = new Date().getTime();
-        String relativeDate = DateUtils
+        final String relativeDate = DateUtils
                 .getRelativeTimeSpanString(post.getCreatedAt().getTime(),
                         now, DateUtils.SECOND_IN_MILLIS).toString();
         tvRelativeCreation.setText(relativeDate);

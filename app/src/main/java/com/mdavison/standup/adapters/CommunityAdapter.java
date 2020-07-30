@@ -87,7 +87,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.View
             if (image != null) {
                 Glide.with(context).load(image.getUrl()).into(ivIcon);
             }
-            tvUserCount.setText(community.getUserCount() + " users");
+            tvUserCount.setText(community.getUserCount() + " followers");
         }
     }
 }
