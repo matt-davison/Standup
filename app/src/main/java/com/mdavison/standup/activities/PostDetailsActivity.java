@@ -85,7 +85,6 @@ public class PostDetailsActivity extends AppCompatActivity {
                     }
                     ((TextView) comment.findViewById(R.id.tvComment))
                             .setText(comments.get(i).getComment());
-                    //TODO: Set date!
                     llComments.addView(comment,
                             comments.size() - results.size() + i);
                 }

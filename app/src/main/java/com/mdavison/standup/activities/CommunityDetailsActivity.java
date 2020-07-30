@@ -92,6 +92,7 @@ public class CommunityDetailsActivity extends AppCompatActivity {
                                 }
                                 ParseUser.getCurrentUser().saveInBackground();
                                 community.saveInBackground();
+                                tvUserCount.setText(community.getUserCount() + " followers");
                             });
                 });
         final RecyclerView rvPosts = findViewById(R.id.rvPosts);

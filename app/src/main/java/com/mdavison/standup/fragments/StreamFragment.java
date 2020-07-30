@@ -74,8 +74,6 @@ public class StreamFragment extends Fragment {
         comments = new ArrayList<>();
         queryPosts();
         postBehind = view.findViewById(R.id.postBehind);
-        //TODO: Make postFront an item_post_detail and change height instead
-        // of having another view
         postFront = view.findViewById(R.id.post);
         postDetail = view.findViewById(R.id.postDetail);
         llComments = postDetail.findViewById(R.id.llComments);
