@@ -151,7 +151,6 @@ User
 |username|String|The User's username|
 |email|String|The User's email address|
 |password|String|The User's password|
-|phone|String|The User's phone number|
 |communities|Relation to Community|The communities a User follows|
 |followers|Number|The number of followers|
 |followings|Number|The number of followings|
@@ -165,7 +164,6 @@ Post
 |objectId|String|Post's id|
 |author|Pointer to User|The author|
 |createdAt|Date|When the post was created|
-|updatedAt|Date|When the post was updated|
 |title|String|The Post's title|
 |media|File|The Post's attached media|
 |description|The Posts's description|
@@ -173,7 +171,8 @@ Post
 |likes|Number|The Post's likes|
 |views|Number|The Post's views|
 |viewers|Relation to User|Users that viewed this post|
-|tags|Relation to Tag|The Post's tags|
+|postedTo|Relation to Community|Communities this post is shared to|
+|comments|Relation to Comment|Comments on this post|
 
 Community
 | Property      | Type      | Description        |
@@ -187,15 +186,22 @@ Community
 |mods|Relation to User|The Community's mods|
 |userCount|Number|The number of followers|
 |banned|Relation to User|Users banned from this Community|
-|posts|Relation to Post|Posts made to this Community|
 |tags|Relation to Tag|Tags for this Community|
-   
+
 Tag
 | Property      | Type      | Description        |
 |---------------|-----------|--------------------|
 |objectId|String|Tag's id|
 |tag|String|The tag|
 |postsCount|Number|Number of Posts using this tag|
+
+Comment
+| Property      | Type      | Description        |
+|---------------|-----------|--------------------|
+|objectId|String|Comment's id|
+|comment|String|The tag|
+|author|Pointer to User|The author|
+|likes |Number|Number of likes on the comment|
 
 ### Networking
 Home Feed Screen
