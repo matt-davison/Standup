@@ -54,6 +54,7 @@ public class ProfileFragment extends Fragment {
     private ParseUser user;
     private ImageView ivProfile;
     private File photoFile;
+
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -98,7 +99,7 @@ public class ProfileFragment extends Fragment {
         if (profileImage != null) {
             Glide.with(getContext()).load(profileImage.getUrl()).into(ivProfile);
         } else {
-            Log.i(TAG, "PROFILE IMAGE IS NULL");
+            Glide.with(getContext()).clear(ivProfile);
         }
         userPosts = new ArrayList<>();
         final RecyclerView rvPosts = view.findViewById(R.id.rvPosts);
