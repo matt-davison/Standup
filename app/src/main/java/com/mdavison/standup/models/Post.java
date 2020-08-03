@@ -81,7 +81,7 @@ public class Post extends ParseObject {
                 user.getRelation(User.KEY_VIEW_HISTORY).getQuery();
         query.whereEqualTo(Post.KEY_OBJECT_ID, getObjectId());
         query.countInBackground((count, e) -> {
-            if (count == 0) {
+            if (e == null && count == 0) {
                 user.getRelation(User.KEY_VIEW_HISTORY).add(Post.this);
                 increment(KEY_VIEW_COUNT);
                 user.saveInBackground();

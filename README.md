@@ -26,11 +26,11 @@ Standup is a platform that allows its users to moderate the content they see. Ju
 - [x] You can log in/log out of your app as a user
 - [x] You can sign up with a new user profile
 - [x] Somewhere in your app you can use the camera to take a picture and do something with the picture (e.g. take a photo and share it to a feed, or take a photo and set a user’s profile picture)
-- [] Your app integrates with a SDK (e.g. Google Maps SDK, Facebook SDK)
+- [x] Your app integrates with a SDK (e.g. Google Maps SDK, Facebook SDK)
 - [] Your app contains at least one more complex algorithm (talk over this with your manager)
 - [x] Your app uses gesture recognizers (e.g. double tap to like, e.g. pinch to scale)
 - [x] Your app use an animation (doesn’t have to be fancy) (e.g. fade in/out, e.g. animating a view growing and shrinking)
-- [] Your app incorporates an external library to add visual polish
+- [x] Your app incorporates an external library to add visual polish
 
 ### Walkthrough
 ![Video Walthrough](https://github.com/matt-davison/Standup/blob/master/Kapture.gif)
@@ -41,34 +41,31 @@ GIF created with [Kap](https://getkap.co/).
 ### 1. User Stories (Required and Optional)
 
 **Required Must-have Stories**
-
 * User can register an account
 * User can login
-* User can follow Communities
-* User can create Communities
-* User can vote for content to Sit Down or Stand (swipe left or right)
+* User can follow communities
+* User can create communities
+* User can vote for content (swipe left/right)
 * User can interact with content/creator (swipe up)
-* User can view a specific Community's feed
-* User can sort a feed by Hot, Best, New
-* User can Search for a community
-* User can create content
-    * Short looping videos (Bites)
-    * Pictures
-    * Text Post
+* User can sort a feed by trending, top, latest
+* User can search for a community
+* User can create posts (with or without media)
+* User can set profile picture
 
 **Optional Nice-to-have Stories**
-* Collaborative filtering sort
-* User can filter home feed by up/ communities or me/ communities
+* User can create posts with GIFs (bites)
 * User can report content
-* User has settings menu
-    * Change name
-    * Change privacy of posts made to your personal community
-* Explore Feed to find new, suggested content
+* User can change username
+* User can view other users' profiles
+* User can search for posts and other users
+* Option to hide already seen posts in feed
+* Explore Feed to find collaborative-filtering suggested content
 * Can filter Search by creator or community
-* User can create livestreams (cannot be posted to a community and are displayed at top of home feed and on user's page)
 * Detail view for a community
-* Blockchain rewards/awards system
-
+* Save most recently used sorting method
+* View like/dislike history
+* Share posts outside app
+* Share posts within app (to user groups)
 
 ### 2. Screen Archetypes
 
