@@ -41,31 +41,31 @@ GIF created with [Kap](https://getkap.co/).
 ### 1. User Stories (Required and Optional)
 
 **Required Must-have Stories**
-* User can register an account
-* User can login
-* User can follow communities
-* User can create communities
-* User can vote for content (swipe left/right)
-* User can interact with content/creator (swipe up)
-* User can sort a feed by trending, top, latest
-* User can search for a community
-* User can create posts (with or without media)
-* User can set profile picture
+- [x] User can register an account
+- [x] User can login
+- [x] User can follow communities
+- [] User can create communities
+- [x] User can vote for content (swipe left/right)
+- [x] User can interact with content/creator (swipe up)
+- [] User can sort a feed by trending, top, latest
+- [x] User can search for a community
+- [x] User can create posts (with or without media)
+- [x] User can set profile picture
 
 **Optional Nice-to-have Stories**
-* User can create posts with GIFs (bites)
-* User can report content
-* User can change username
-* User can view other users' profiles
-* User can search for posts and other users
-* Option to hide already seen posts in feed
-* Explore Feed to find collaborative-filtering suggested content
-* Can filter Search by creator or community
-* Detail view for a community
-* Save most recently used sorting method
-* View like/dislike history
-* Share posts outside app
-* Share posts within app (to user groups)
+- [] User can create posts with GIFs (bites)
+- [] User can report content
+- [] User can change username
+- [] User can view other users' profiles
+- [] User can search for posts and other users
+- [] Option to hide already seen posts in feed
+- [] Explore Feed to find collaborative-filtering suggested content
+- [] Can filter Search by creator or community
+- [x] Detail view for a community
+- [] Save most recently used sorting method
+- [] View like/dislike history
+- [] Share posts outside app
+- [] Share posts within app (to user groups)
 
 ### 2. Screen Archetypes
 

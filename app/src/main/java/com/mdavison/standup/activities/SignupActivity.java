@@ -63,10 +63,7 @@ public class SignupActivity extends AppCompatActivity {
                                                         .show();
                                                 return;
                                             }
-                                            Intent i = new Intent(
-                                                    SignupActivity.this,
-                                                    MainActivity.class);
-                                            startActivity(i);
+                                            finish();
                                         }
                                     });
                         } else {

@@ -33,13 +33,10 @@ public class LoginActivity extends AppCompatActivity {
     private static final List<String> FB_READ_PERMISSIONS =
             Arrays.asList("email");
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-
-        ParseFacebookUtils.initialize(this);
-
+    protected void onResume() {
+        super.onResume();
         if (ParseUser.getCurrentUser() != null) {
             try {
                 ParseUser.getCurrentUser().fetch();
@@ -51,6 +48,14 @@ public class LoginActivity extends AppCompatActivity {
                                 "again", Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+
+        ParseFacebookUtils.initialize(this);
 
         final Button btnLogin = findViewById(R.id.btnLogin);
         btnLogin.setOnClickListener(new View.OnClickListener() {

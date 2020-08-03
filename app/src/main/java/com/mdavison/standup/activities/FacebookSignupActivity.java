@@ -38,10 +38,7 @@ public class FacebookSignupActivity extends AppCompatActivity {
                 final String username = etUsername.getText().toString();
                 user.setUsername(username);
                 user.saveInBackground();
-                Intent i = new Intent(
-                        FacebookSignupActivity.this,
-                        MainActivity.class);
-                startActivity(i);
+                finish();
             }
         });
     }
