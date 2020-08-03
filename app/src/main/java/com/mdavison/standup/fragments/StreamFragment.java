@@ -45,6 +45,7 @@ import java.util.List;
 public class StreamFragment extends Fragment {
 
     private static final String TAG = "StreamFragment";
+    private static final int MAX_TRENDING_HRS = 48;
     private List<Post> posts;
     private List<Comment> comments;
     private CardView postFront;
@@ -53,6 +54,8 @@ public class StreamFragment extends Fragment {
     private LinearLayout llComments;
     private ParseUser currentUser;
     private int postsRetrieved = 0;
+    private SortBy sortBy = SortBy.NEW;
+    private boolean onlyUnseenPosts = false;
 
     public StreamFragment() {
         // Required empty public constructor
@@ -78,7 +81,6 @@ public class StreamFragment extends Fragment {
         postDetail = view.findViewById(R.id.postDetail);
         llComments = postDetail.findViewById(R.id.llComments);
         final ScrollView svDetailsHolder = view.findViewById(R.id.svDetails);
-
         final OnSwipeTouchListener swipeListener =
                 new OnSwipeTouchListener(getContext()) {
 
@@ -87,8 +89,6 @@ public class StreamFragment extends Fragment {
                     @Override
                     public void onSwipeRight() {
                         this.onSwipeDown();
-                        Toast.makeText(getContext(), "\uD83D\uDC4D",
-                                Toast.LENGTH_SHORT).show();
                         ValueAnimator swipeAnim = ObjectAnimator
                                 .ofFloat(postFront, View.TRANSLATION_X,
                                         view.getWidth());
@@ -110,8 +110,6 @@ public class StreamFragment extends Fragment {
                     @Override
                     public void onSwipeLeft() {
                         this.onSwipeDown();
-                        Toast.makeText(getContext(), "\uD83D\uDC4E",
-                                Toast.LENGTH_SHORT).show();
                         ValueAnimator swipeAnim = ObjectAnimator
                                 .ofFloat(postFront, View.TRANSLATION_X,
                                         -view.getWidth());
@@ -167,23 +165,36 @@ public class StreamFragment extends Fragment {
     }
 
     private void advancePost() {
-        if (posts.size() <= 5) {
-            queryPosts();
-        }
-        if (posts.size() <= 2) {
+        if (posts.size() <= 1) {
             Log.e(TAG, "Not enough posts to advance");
-            Toast.makeText(getContext(), "Need more posts!", Toast.LENGTH_LONG)
-                    .show();
+            Toast.makeText(getContext(),
+                    "No more posts to show, try following more communities or" +
+                            " change your sort",
+                    Toast.LENGTH_LONG).show();
             return;
         }
         posts.remove(0);
+        if (posts.size() <= 5) {
+            //TODO: skip the posts that are already lined up in the queue!
+            queryPosts();
+        }
         setPosts();
     }
 
     private void setPosts() {
-        if (posts.size() <= 1) {
+        if (posts.size() == 0) {
+            Log.i(TAG, "No posts to show");
+            Toast.makeText(getContext(),
+                    "No posts to show, try following more communities or " +
+                            "change your sort",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (posts.size() == 1) {
             Log.i(TAG, "Not enough posts");
             setPost(posts.get(0), postFront);
+            setPost(posts.get(0), postBehind);
+            setPost(posts.get(0), postDetail);
             return;
         }
 
@@ -250,11 +261,12 @@ public class StreamFragment extends Fragment {
             Log.e(TAG, "Unable to fetch author");
         }
 
-        final TextView tvRelativeCreation = postView.findViewById(R.id.tvRelativeCreation);
+        final TextView tvRelativeCreation =
+                postView.findViewById(R.id.tvRelativeCreation);
         final long now = new Date().getTime();
         String relativeDate = DateUtils
-                .getRelativeTimeSpanString(post.getCreatedAt().getTime(),
-                        now, DateUtils.SECOND_IN_MILLIS).toString();
+                .getRelativeTimeSpanString(post.getCreatedAt().getTime(), now,
+                        DateUtils.SECOND_IN_MILLIS).toString();
         tvRelativeCreation.setText(relativeDate);
     }
 
@@ -283,9 +295,32 @@ public class StreamFragment extends Fragment {
                 queries.add(fromCommunity);
             }
             ParseQuery<Post> query = ParseQuery.or(queries);
-            query.setLimit(10);
-            query.setSkip(postsRetrieved);
-            query.addDescendingOrder(Post.KEY_CREATED);
+            query.setSkip(posts.size());
+            if (onlyUnseenPosts) {
+                query.whereDoesNotMatchKeyInQuery(Post.KEY_OBJECT_ID,
+                        Post.KEY_OBJECT_ID,
+                        currentUser.getRelation(User.KEY_VIEW_HISTORY).getQuery());
+            } else {
+                query.setSkip(postsRetrieved);
+            }
+            switch (sortBy) {
+                case TOP_RATED:
+                    //TODO
+                    break;
+                case TRENDING:
+                    query.setLimit(50);
+                    query.addDescendingOrder(Post.KEY_RATING);
+                    final Date now = new Date();
+                    final Date trendSince = new Date(
+                            now.getTime() - MAX_TRENDING_HRS * 3600000);
+                    query.whereGreaterThan(Post.KEY_CREATED_AT, trendSince);
+                    break;
+                case NEW:
+                default:
+                    query.setLimit(20);
+                    query.addDescendingOrder(Post.KEY_CREATED_AT);
+                    break;
+            }
             query.findInBackground((newPosts, error) -> {
                 if (error != null) {
                     Log.e(TAG, "Issue with getting posts", error);
@@ -298,8 +333,12 @@ public class StreamFragment extends Fragment {
                     setPosts();
                 }
                 postsRetrieved += newPosts.size();
-
+                //TODO: on sort change reset posts retrieved!!!
             });
         });
+    }
+
+    private enum SortBy {
+        NEW, TOP_RATED, TRENDING
     }
 }

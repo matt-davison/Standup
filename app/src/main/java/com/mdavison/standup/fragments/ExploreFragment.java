@@ -122,8 +122,6 @@ public class ExploreFragment extends Fragment {
                         }
                         communityAdapter.clear();
                         communityAdapter.addAll(newCommunities);
-                        Log.i(TAG, "Received " + newCommunities.size() +
-                                " communities");
                     });
         } else {
             ParseQuery<Community> query = ParseQuery.getQuery(Community.class);
@@ -139,8 +137,6 @@ public class ExploreFragment extends Fragment {
                     return;
                 }
                 communityAdapter.addAll(newCommunities);
-                Log.i(TAG,
-                        "Received " + newCommunities.size() + " communities");
             });
         }
     }

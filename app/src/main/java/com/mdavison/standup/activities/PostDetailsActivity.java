@@ -1,7 +1,5 @@
 package com.mdavison.standup.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -10,6 +8,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.mdavison.standup.R;
@@ -28,12 +28,14 @@ import java.util.List;
 
 public class PostDetailsActivity extends AppCompatActivity {
     private static final String TAG = "PostDetailsActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_details);
 
-        final Post post = (Post) Parcels.unwrap(getIntent().getParcelableExtra(Extras.EXTRA_POST));
+        final Post post = (Post) Parcels
+                .unwrap(getIntent().getParcelableExtra(Extras.EXTRA_POST));
 
         final TextView tvTitle = findViewById(R.id.tvTitle);
         tvTitle.setText(post.getTitle());
@@ -54,11 +56,12 @@ public class PostDetailsActivity extends AppCompatActivity {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        final TextView tvRelativeCreation = findViewById(R.id.tvRelativeCreation);
+        final TextView tvRelativeCreation =
+                findViewById(R.id.tvRelativeCreation);
         final long now = new Date().getTime();
         final String relativeDate = DateUtils
-                .getRelativeTimeSpanString(post.getCreatedAt().getTime(),
-                        now, DateUtils.SECOND_IN_MILLIS).toString();
+                .getRelativeTimeSpanString(post.getCreatedAt().getTime(), now,
+                        DateUtils.SECOND_IN_MILLIS).toString();
         tvRelativeCreation.setText(relativeDate);
         final LinearLayout llComments = findViewById(R.id.llComments);
         final List<Comment> comments = new ArrayList<>();

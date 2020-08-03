@@ -3,6 +3,7 @@ package com.mdavison.standup.models;
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 /**
@@ -16,13 +17,10 @@ public class Post extends ParseObject {
     public static final String KEY_DESCRIPTION = "description";
     public static final String KEY_MEDIA = "media";
     public static final String KEY_AUTHOR = "author";
-    public static final String KEY_CREATED = "createdAt";
     public static final String KEY_COMMENTS = "comments";
     public static final String KEY_LIKE_COUNT = "likes";
     public static final String KEY_RATING = "rating";
     public static final String KEY_VIEW_COUNT = "views";
-    public static final String KEY_VIEWERS = "viewers";
-    public static final String KEY_LIKERS = "likers";
     public static final String KEY_TAGS = "tags";
 
     // empty constructor needed by Parceler library
@@ -62,17 +60,40 @@ public class Post extends ParseObject {
     }
 
     public boolean addLike(ParseUser user) {
-        //TODO: Add check if user has already liked post and if so, return false
-        getRelation(KEY_LIKERS).add(user);
-        increment(KEY_LIKE_COUNT);
-        saveInBackground();
+        ParseQuery<ParseObject> query =
+                user.getRelation(User.KEY_LIKE_HISTORY).getQuery();
+        query.whereEqualTo(Post.KEY_OBJECT_ID, getObjectId());
+        query.countInBackground((count, e) -> {
+            if (e == null && count == 0) {
+                user.getRelation(User.KEY_LIKE_HISTORY).add(Post.this);
+                user.saveInBackground();
+                increment(KEY_LIKE_COUNT);
+                put(KEY_RATING,
+                        getDouble(KEY_LIKE_COUNT) / getDouble(KEY_VIEW_COUNT));
+                saveInBackground();
+            }
+        });
         return true;
     }
 
     public boolean addViewer(ParseUser user) {
-        getRelation(KEY_VIEWERS).add(user);
-        increment(KEY_VIEW_COUNT);
-        saveInBackground();
+        ParseQuery<ParseObject> query =
+                user.getRelation(User.KEY_VIEW_HISTORY).getQuery();
+        query.whereEqualTo(Post.KEY_OBJECT_ID, getObjectId());
+        query.countInBackground((count, e) -> {
+            if (count == 0) {
+                user.getRelation(User.KEY_VIEW_HISTORY).add(Post.this);
+                increment(KEY_VIEW_COUNT);
+                user.saveInBackground();
+                put(KEY_RATING,
+                        getDouble(KEY_LIKE_COUNT) / getDouble(KEY_VIEW_COUNT));
+                saveInBackground();
+            }
+        });
         return true;
+    }
+
+    public double getRating() {
+        return getDouble(KEY_RATING);
     }
 }

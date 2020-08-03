@@ -126,7 +126,7 @@ public class CommunityDetailsActivity extends AppCompatActivity {
         query.whereEqualTo(Post.KEY_POSTED_TO, community);
         query.setLimit(20);
         query.setSkip(communityPosts.size());
-        query.addDescendingOrder(Post.KEY_CREATED);
+        query.addDescendingOrder(Post.KEY_CREATED_AT);
         query.findInBackground((newPosts, error) -> {
             if (error != null) {
                 Log.e(TAG, "Issue with getting posts", error);

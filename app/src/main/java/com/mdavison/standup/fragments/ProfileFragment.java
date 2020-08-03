@@ -25,6 +25,7 @@ import com.mdavison.standup.R;
 import com.mdavison.standup.activities.PostDetailsActivity;
 import com.mdavison.standup.adapters.PostAdapter;
 import com.mdavison.standup.models.Post;
+import com.mdavison.standup.models.User;
 import com.mdavison.standup.support.EndlessRecyclerViewScrollListener;
 import com.mdavison.standup.support.Extras;
 import com.mdavison.standup.support.ImageHelp;
@@ -139,7 +140,7 @@ public class ProfileFragment extends Fragment {
                 Bitmap takenImage = ImageHelp
                         .rotateBitmapOrientation(photoFile.getAbsolutePath());
                 ivProfile.setImageBitmap(takenImage);
-                user.put("picture", new ParseFile(photoFile));
+                user.put(User.KEY_PICTURE, new ParseFile(photoFile));
                 user.saveInBackground();
             } else {
                 Toast.makeText(getContext(), "Picture wasn't taken!",
@@ -153,7 +154,7 @@ public class ProfileFragment extends Fragment {
             query.whereEqualTo(Post.KEY_AUTHOR, user);
             query.setLimit(20);
             query.setSkip(userPosts.size());
-            query.addDescendingOrder(Post.KEY_CREATED);
+            query.addDescendingOrder(Post.KEY_CREATED_AT);
             query.findInBackground((newPosts, error) -> {
                 if (error != null) {
                     Log.e(TAG, "Issue with getting posts", error);
@@ -162,7 +163,6 @@ public class ProfileFragment extends Fragment {
                     return;
                 }
                 postAdapter.addAll(newPosts);
-                Log.i(TAG, "Received " + newPosts.size() + " posts");
         });
     }
 
