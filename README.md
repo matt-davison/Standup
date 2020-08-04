@@ -27,7 +27,7 @@ Standup is a platform that allows its users to moderate the content they see. Ju
 - [x] You can sign up with a new user profile
 - [x] Somewhere in your app you can use the camera to take a picture and do something with the picture (e.g. take a photo and share it to a feed, or take a photo and set a user’s profile picture)
 - [x] Your app integrates with a SDK (e.g. Google Maps SDK, Facebook SDK)
-- [] Your app contains at least one more complex algorithm (talk over this with your manager)
+- [x] Your app contains at least one more complex algorithm (talk over this with your manager)
 - [x] Your app uses gesture recognizers (e.g. double tap to like, e.g. pinch to scale)
 - [x] Your app use an animation (doesn’t have to be fancy) (e.g. fade in/out, e.g. animating a view growing and shrinking)
 - [x] Your app incorporates an external library to add visual polish
@@ -46,8 +46,11 @@ GIF created with [Kap](https://getkap.co/).
 - [x] User can follow communities
 - [] User can create communities
 - [x] User can vote for content (swipe left/right)
-- [x] User can interact with content/creator (swipe up)
-- [] User can sort a feed by trending, top, latest
+- [x] User can view post details (swipe up)
+  - [] User can view author's profile
+  - [] User can view comments
+  - [] User can create comments
+- [x] User can sort a feed by trending, top, latest
 - [x] User can search for a community
 - [x] User can create posts (with or without media)
 - [x] User can set profile picture

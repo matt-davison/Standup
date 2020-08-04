@@ -9,6 +9,9 @@ import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -24,6 +27,7 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.mdavison.standup.R;
+import com.mdavison.standup.holders.FeedPostHolder;
 import com.mdavison.standup.models.Comment;
 import com.mdavison.standup.models.Community;
 import com.mdavison.standup.models.Post;
@@ -36,7 +40,6 @@ import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -45,7 +48,7 @@ import java.util.List;
 public class StreamFragment extends Fragment {
 
     private static final String TAG = "StreamFragment";
-    private static final int MAX_TRENDING_HRS = 48;
+    private static final int MAX_TRENDING_HRS = 240;
     private List<Post> posts;
     private List<Comment> comments;
     private CardView postFront;
@@ -54,9 +57,9 @@ public class StreamFragment extends Fragment {
     private LinearLayout llComments;
     private ParseUser currentUser;
     private int postsRetrieved = 0;
-    private SortBy sortBy = SortBy.NEW;
+    private SortBy sortBy = SortBy.LATEST;
     private boolean onlyUnseenPosts = false;
-
+    private FeedPostHolder postHolder;
     public StreamFragment() {
         // Required empty public constructor
     }
@@ -73,7 +76,8 @@ public class StreamFragment extends Fragment {
                               @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         currentUser = ParseUser.getCurrentUser();
-        posts = new LinkedList<>();
+        posts = new ArrayList<>();
+        postHolder = new FeedPostHolder(posts);
         comments = new ArrayList<>();
         queryPosts();
         postBehind = view.findViewById(R.id.postBehind);
@@ -168,14 +172,12 @@ public class StreamFragment extends Fragment {
         if (posts.size() <= 1) {
             Log.e(TAG, "Not enough posts to advance");
             Toast.makeText(getContext(),
-                    "No more posts to show, try following more communities or" +
-                            " change your sort",
+                    "No more posts to show, try following more communities",
                     Toast.LENGTH_LONG).show();
             return;
         }
         posts.remove(0);
         if (posts.size() <= 5) {
-            //TODO: skip the posts that are already lined up in the queue!
             queryPosts();
         }
         setPosts();
@@ -185,8 +187,7 @@ public class StreamFragment extends Fragment {
         if (posts.size() == 0) {
             Log.i(TAG, "No posts to show");
             Toast.makeText(getContext(),
-                    "No posts to show, try following more communities or " +
-                            "change your sort",
+                    "No posts to show, try following more communities",
                     Toast.LENGTH_LONG).show();
             return;
         }
@@ -295,27 +296,33 @@ public class StreamFragment extends Fragment {
                 queries.add(fromCommunity);
             }
             ParseQuery<Post> query = ParseQuery.or(queries);
-            query.setSkip(posts.size());
             if (onlyUnseenPosts) {
                 query.whereDoesNotMatchKeyInQuery(Post.KEY_OBJECT_ID,
                         Post.KEY_OBJECT_ID,
                         currentUser.getRelation(User.KEY_VIEW_HISTORY).getQuery());
+                query.setSkip(posts.size());
             } else {
                 query.setSkip(postsRetrieved);
             }
+            final Date now = new Date();
             switch (sortBy) {
-                case TOP_RATED:
-                    //TODO
-                    break;
-                case TRENDING:
-                    query.setLimit(50);
+                case TOP_ALL:
+                    query.setLimit(20);
                     query.addDescendingOrder(Post.KEY_RATING);
-                    final Date now = new Date();
+                    break;
+                case TOP_WEEK:
+                    query.setLimit(20);
+                    query.addDescendingOrder(Post.KEY_RATING);
+                    final Date topWeek = new Date(now.getTime() - 604800000);
+                    query.whereGreaterThan(Post.KEY_CREATED_AT, topWeek);
+                case TRENDING:
+                    query.setLimit(20);
+                    query.addDescendingOrder(Post.KEY_RATING);
                     final Date trendSince = new Date(
                             now.getTime() - MAX_TRENDING_HRS * 3600000);
                     query.whereGreaterThan(Post.KEY_CREATED_AT, trendSince);
                     break;
-                case NEW:
+                case LATEST:
                 default:
                     query.setLimit(20);
                     query.addDescendingOrder(Post.KEY_CREATED_AT);
@@ -329,16 +336,83 @@ public class StreamFragment extends Fragment {
                     return;
                 }
                 posts.addAll(newPosts);
+                switch (sortBy) {
+                    case TRENDING:
+                        posts = postHolder.getTrendingPosts();
+                        break;
+                    case TOP_ALL:
+                    case TOP_WEEK:
+                        posts = postHolder.getTopPosts();
+                        break;
+                }
                 if (postsRetrieved == 0) {
                     setPosts();
                 }
                 postsRetrieved += newPosts.size();
-                //TODO: on sort change reset posts retrieved!!!
             });
         });
     }
 
     private enum SortBy {
-        NEW, TOP_RATED, TRENDING
+        LATEST, TRENDING, TOP_ALL, TOP_WEEK
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu,
+                                    @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_stream, menu);
+        MenuItem selected = menu.findItem(R.id.action_latest);
+        selected.setChecked(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_latest:
+                if (!item.isChecked()) {
+                    item.setChecked(true);
+                    posts.clear();
+                    sortBy = SortBy.LATEST;
+                    postsRetrieved = 0;
+                    queryPosts();
+                }
+                return true;
+            case R.id.action_trending:
+                if (!item.isChecked()) {
+                    item.setChecked(true);
+                    posts.clear();
+                    sortBy = SortBy.TRENDING;
+                    postsRetrieved = 0;
+                    queryPosts();
+                }
+                return true;
+            case R.id.action_top_week:
+                if (!item.isChecked()) {
+                    item.setChecked(true);
+                    posts.clear();
+                    sortBy = SortBy.TOP_WEEK;
+                    postsRetrieved = 0;
+                    queryPosts();
+                }
+                return true;
+            case R.id.action_top_all:
+                if (!item.isChecked()) {
+                    item.setChecked(true);
+                    posts.clear();
+                    sortBy = SortBy.TOP_ALL;
+                    postsRetrieved = 0;
+                    queryPosts();
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

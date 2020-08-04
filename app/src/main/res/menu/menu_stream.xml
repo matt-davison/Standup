@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:id="@+id/group_sorting"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/action_latest"
+            android:title="Latest Posts" />
+        <item
+            android:id="@+id/action_trending"
+            android:title="Trending Posts" />
+        <item
+            android:id="@+id/action_top_week"
+            android:title="Top Posts This Week" />
+        <item
+            android:id="@+id/action_top_all"
+            android:title="Top Posts All Time" />
+    </group>
+</menu>
