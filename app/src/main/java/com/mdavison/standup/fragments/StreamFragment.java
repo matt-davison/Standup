@@ -48,7 +48,7 @@ import java.util.List;
 public class StreamFragment extends Fragment {
 
     private static final String TAG = "StreamFragment";
-    private static final int MAX_TRENDING_HRS = 240;
+    private static final int MAX_TRENDING_HRS = 480;
     private List<Post> posts;
     private List<Comment> comments;
     private CardView postFront;
@@ -271,6 +271,7 @@ public class StreamFragment extends Fragment {
         tvRelativeCreation.setText(relativeDate);
     }
 
+    //TODO: Move this and all possible post logic into FeedPostHolder
     private void queryPosts() {
         ParseRelation<Community> communitiesRelation =
                 currentUser.getRelation(User.KEY_COMMUNITIES);
@@ -335,6 +336,7 @@ public class StreamFragment extends Fragment {
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
+                Log.i(TAG, "retrieved posts: "+ newPosts.size());
                 posts.addAll(newPosts);
                 switch (sortBy) {
                     case TRENDING:
@@ -411,6 +413,18 @@ public class StreamFragment extends Fragment {
                     queryPosts();
                 }
                 return true;
+            case R.id.action_show_unseen:
+                if (!item.isChecked()) {
+                    item.setChecked(true);
+                    onlyUnseenPosts = true;
+                }
+                else {
+                    item.setChecked(false);
+                    onlyUnseenPosts = false;
+                }
+                posts.clear();
+                postsRetrieved = 0;
+                queryPosts();
             default:
                 return super.onOptionsItemSelected(item);
         }
