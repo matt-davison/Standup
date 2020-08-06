@@ -181,7 +181,9 @@ public class ComposeFragment extends Fragment
         newPost.setAuthor(ParseUser.getCurrentUser());
         newPost.setDescription(etDescription.getText().toString());
         newPost.setTitle(etTitle.getText().toString());
-        newPost.setMedia(new ParseFile(photoFile));
+        if (photoFile != null) {
+            newPost.setMedia(new ParseFile(photoFile));
+        }
         ParseRelation<Community> userCommunities =
                 newPost.getRelation("postedTo");
         for (Community community : selectedCommunities) {

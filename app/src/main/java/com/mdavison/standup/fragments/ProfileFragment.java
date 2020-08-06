@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.mdavison.standup.R;
 import com.mdavison.standup.activities.PostDetailsActivity;
 import com.mdavison.standup.adapters.PostAdapter;
@@ -72,11 +73,11 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         ivProfile = view.findViewById(R.id.ivProfile);
+        final ImageView ivLogout = view.findViewById(R.id.ivLogout);
         final ParseUser selectedUser = Parcels.unwrap(getActivity().getIntent()
                 .getParcelableExtra(Extras.EXTRA_USER));
         if (selectedUser == null) {
             user = ParseUser.getCurrentUser();
-            final ImageView ivLogout = view.findViewById(R.id.ivLogout);
             ivLogout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -92,13 +93,14 @@ public class ProfileFragment extends Fragment {
             });
         } else {
             user = selectedUser;
+            ivLogout.setVisibility(View.INVISIBLE);
         }
         final TextView tvUsername = view.findViewById(R.id.tvUsername);
         tvUsername.setText(user.getUsername());
         final ImageView ivProfile = view.findViewById(R.id.ivProfile);
         ParseFile profileImage = user.getParseFile("picture");
         if (profileImage != null) {
-            Glide.with(getContext()).load(profileImage.getUrl()).into(ivProfile);
+            Glide.with(getContext()).load(profileImage.getUrl()).transform(new RoundedCorners(12)).into(ivProfile);
         } else {
             Glide.with(getContext()).clear(ivProfile);
         }

@@ -4,10 +4,10 @@
     android:id="@+id/cvPost"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="16dp"
-    android:layout_marginBottom="16dp"
     android:layout_marginStart="8dp"
+    android:layout_marginTop="16dp"
     android:layout_marginEnd="8dp"
+    android:layout_marginBottom="16dp"
     card_view:cardCornerRadius="32dp"
     card_view:cardElevation="6dp">
 
@@ -19,7 +19,8 @@
         android:layout_marginTop="0dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:backgroundTint="@color/colorPrimaryDark">
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:padding="8dp">
 
         <TextView
             android:id="@+id/tvTitle"
@@ -39,9 +40,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvTitle"
+            android:layout_marginLeft="-8dp"
             android:layout_marginTop="0dp"
+            android:layout_marginRight="-8dp"
             android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
+            android:maxHeight="400dp"
+            android:scaleType="fitCenter"
             card_view:srcCompat="@drawable/ic_add_box_24px" />
 
         <TextView

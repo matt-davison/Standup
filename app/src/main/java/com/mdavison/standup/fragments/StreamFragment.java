@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -26,17 +27,22 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.mdavison.standup.R;
+import com.mdavison.standup.activities.ProfileActivity;
 import com.mdavison.standup.holders.FeedPostHolder;
 import com.mdavison.standup.models.Comment;
 import com.mdavison.standup.models.Community;
 import com.mdavison.standup.models.Post;
 import com.mdavison.standup.models.User;
+import com.mdavison.standup.support.Extras;
 import com.mdavison.standup.support.OnSwipeTouchListener;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -60,6 +66,7 @@ public class StreamFragment extends Fragment {
     private SortBy sortBy = SortBy.LATEST;
     private boolean onlyUnseenPosts = false;
     private FeedPostHolder postHolder;
+
     public StreamFragment() {
         // Required empty public constructor
     }
@@ -103,7 +110,8 @@ public class StreamFragment extends Fragment {
                                 super.onAnimationEnd(animation);
                                 likePost();
                                 ValueAnimator returnAnim = ObjectAnimator
-                                        .ofFloat(postFront, View.X, 0f);
+                                        .ofFloat(postFront, View.TRANSLATION_X,
+                                                0);
                                 returnAnim.setDuration(0);
                                 returnAnim.start();
                             }
@@ -124,7 +132,8 @@ public class StreamFragment extends Fragment {
                                 super.onAnimationEnd(animation);
                                 viewPost();
                                 ValueAnimator returnAnim = ObjectAnimator
-                                        .ofFloat(postFront, View.X, 0f);
+                                        .ofFloat(postFront, View.TRANSLATION_X,
+                                                0);
                                 returnAnim.setDuration(0);
                                 returnAnim.start();
                             }
@@ -150,6 +159,16 @@ public class StreamFragment extends Fragment {
                 };
         view.setOnTouchListener(swipeListener);
         svDetailsHolder.setOnTouchListener(swipeListener);
+        final TextView tvAuthor = postFront.findViewById(R.id.tvAuthor);
+        tvAuthor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getContext(), ProfileActivity.class);
+                i.putExtra(Extras.EXTRA_USER,
+                        Parcels.wrap(posts.get(0).getAuthor()));
+                startActivity(i);
+            }
+        });
     }
 
     private void likePost() {
@@ -185,14 +204,14 @@ public class StreamFragment extends Fragment {
 
     private void setPosts() {
         if (posts.size() == 0) {
-            Log.i(TAG, "No posts to show");
+            Log.w(TAG, "No posts to show");
             Toast.makeText(getContext(),
                     "No posts to show, try following more communities",
                     Toast.LENGTH_LONG).show();
             return;
         }
         if (posts.size() == 1) {
-            Log.i(TAG, "Not enough posts");
+            Log.w(TAG, "Not enough posts");
             setPost(posts.get(0), postFront);
             setPost(posts.get(0), postBehind);
             setPost(posts.get(0), postDetail);
@@ -208,23 +227,34 @@ public class StreamFragment extends Fragment {
         ParseQuery<Comment> query = commentRelation.getQuery();
         query.addDescendingOrder(Comment.KEY_LIKES);
         query.setLimit(20);
+        comments.clear();
+        llComments.removeAllViews();
         query.findInBackground((results, e) -> {
             if (e != null) {
                 Log.e(TAG, "Error fetching comments");
             } else {
-                comments.clear();
                 comments.addAll(results);
                 for (int i = 0; i < results.size(); i++) {
                     View comment = LayoutInflater.from(getContext())
                             .inflate(R.layout.item_comment, null);
                     try {
-                        ((TextView) comment.findViewById(R.id.tvAuthor))
-                                .setText(comments.get(i).getAuthor()
-                                        .fetchIfNeeded().getUsername());
+                        final TextView tvAuthor =
+                                comment.findViewById(R.id.tvAuthor);
+                        tvAuthor.setText(
+                                comments.get(i).getAuthor().fetchIfNeeded()
+                                        .getUsername());
+                        tvAuthor.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent i = new Intent(getContext(), ProfileActivity.class);
+                                i.putExtra(Extras.EXTRA_USER,
+                                        Parcels.wrap(posts.get(0).getAuthor()));
+                                startActivity(i);
+                            }
+                        });
                     } catch (ParseException ex) {
                         ex.printStackTrace();
-                    }
-                    ((TextView) comment.findViewById(R.id.tvComment))
+                    } ((TextView) comment.findViewById(R.id.tvComment))
                             .setText(comments.get(i).getComment());
                     llComments.addView(comment,
                             comments.size() - results.size() + i);
@@ -250,8 +280,8 @@ public class StreamFragment extends Fragment {
             tvDescription.setText("");
         }
         if (post.getMedia() != null) {
-            Glide.with(getContext()).load(post.getMedia().getUrl()).centerCrop()
-                    .into(ivMedia);
+            Glide.with(getContext()).load(post.getMedia().getUrl()).fitCenter()
+                    .transform(new RoundedCorners(20)).into(ivMedia);
         } else {
             Glide.with(getContext()).clear(ivMedia);
             ivMedia.setImageResource(0);
@@ -300,7 +330,8 @@ public class StreamFragment extends Fragment {
             if (onlyUnseenPosts) {
                 query.whereDoesNotMatchKeyInQuery(Post.KEY_OBJECT_ID,
                         Post.KEY_OBJECT_ID,
-                        currentUser.getRelation(User.KEY_VIEW_HISTORY).getQuery());
+                        currentUser.getRelation(User.KEY_VIEW_HISTORY)
+                                .getQuery());
                 query.setSkip(posts.size());
             } else {
                 query.setSkip(postsRetrieved);
@@ -336,7 +367,6 @@ public class StreamFragment extends Fragment {
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Log.i(TAG, "retrieved posts: "+ newPosts.size());
                 posts.addAll(newPosts);
                 switch (sortBy) {
                     case TRENDING:
@@ -353,10 +383,6 @@ public class StreamFragment extends Fragment {
                 postsRetrieved += newPosts.size();
             });
         });
-    }
-
-    private enum SortBy {
-        LATEST, TRENDING, TOP_ALL, TOP_WEEK
     }
 
     @Override
@@ -417,8 +443,7 @@ public class StreamFragment extends Fragment {
                 if (!item.isChecked()) {
                     item.setChecked(true);
                     onlyUnseenPosts = true;
-                }
-                else {
+                } else {
                     item.setChecked(false);
                     onlyUnseenPosts = false;
                 }
@@ -428,5 +453,9 @@ public class StreamFragment extends Fragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private enum SortBy {
+        LATEST, TRENDING, TOP_ALL, TOP_WEEK
     }
 }
