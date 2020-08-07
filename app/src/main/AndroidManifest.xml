@@ -17,7 +17,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.ProfileActivity"></activity>
+        <activity android:name=".activities.CreateCommunityActivity"></activity>
+        <activity android:name=".activities.ProfileActivity" />
         <activity android:name=".activities.FacebookSignupActivity" />
         <activity android:name=".activities.CommunityDetailsActivity" />
         <activity android:name=".activities.PostDetailsActivity" />

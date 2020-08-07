@@ -34,6 +34,7 @@ public class Community extends ParseObject {
     public String getName() {
         return getString(KEY_NAME);
     }
+
     public void setName(String name) {
         put(KEY_NAME, name);
     }

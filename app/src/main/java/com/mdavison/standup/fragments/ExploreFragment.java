@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -19,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mdavison.standup.R;
 import com.mdavison.standup.activities.CommunityDetailsActivity;
-import com.mdavison.standup.activities.PostDetailsActivity;
+import com.mdavison.standup.activities.CreateCommunityActivity;
 import com.mdavison.standup.adapters.CommunityAdapter;
 import com.mdavison.standup.models.Community;
 import com.mdavison.standup.support.EndlessRecyclerViewScrollListener;
@@ -43,6 +44,9 @@ public class ExploreFragment extends Fragment {
     private List<Community> communities;
     private CommunityAdapter communityAdapter;
     private EditText etSearch;
+
+    private RecyclerView rvContent;
+    private Button btnCreateCommunity;
 
     public ExploreFragment() {
         // Required empty public constructor
@@ -74,11 +78,21 @@ public class ExploreFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                communityAdapter.clear();
                 queryCommunities();
             }
         });
-        final RecyclerView rvContent = view.findViewById(R.id.rvContent);
+        rvContent = view.findViewById(R.id.rvContent);
+        btnCreateCommunity = view.findViewById(R.id.btnCreateCommunity);
+        btnCreateCommunity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i =
+                        new Intent(getContext(), CreateCommunityActivity.class);
+                i.putExtra(Extras.EXTRA_COMMUNITY_NAME,
+                        etSearch.getText().toString());
+                startActivity(i);
+            }
+        });
         communityAdapter = new CommunityAdapter(getContext(), communities);
         rvContent.setAdapter(communityAdapter);
         final LinearLayoutManager layoutManager =
@@ -116,19 +130,29 @@ public class ExploreFragment extends Fragment {
                     .findInBackground((newCommunities, error) -> {
                         if (error != null) {
                             Log.e(TAG, "Issue with getting communities", error);
-                            Toast.makeText(getContext(), "Issue getting communities",
+                            Toast.makeText(getContext(),
+                                    "Issue getting communities",
                                     Toast.LENGTH_SHORT).show();
                             return;
                         }
                         communityAdapter.clear();
                         communityAdapter.addAll(newCommunities);
+                        if (communities.size() > 0) {
+                            rvContent.setVisibility(View.VISIBLE);
+                            btnCreateCommunity.setVisibility(View.GONE);
+                        } else {
+                            rvContent.setVisibility(View.GONE);
+                            btnCreateCommunity.setVisibility(View.VISIBLE);
+                        }
                     });
         } else {
+            //TODO: Refactor to combine query results logic
             ParseQuery<Community> query = ParseQuery.getQuery(Community.class);
             query.setLimit(20);
             query.setSkip(communities.size());
             query.addDescendingOrder(Community.KEY_USER_COUNT);
-            query.whereStartsWith(Community.KEY_NAME, etSearch.getText().toString());
+            query.whereStartsWith(Community.KEY_NAME,
+                    etSearch.getText().toString());
             query.findInBackground((newCommunities, error) -> {
                 if (error != null) {
                     Log.e(TAG, "Issue searching communities", error);
@@ -136,7 +160,15 @@ public class ExploreFragment extends Fragment {
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
+                communityAdapter.clear();
                 communityAdapter.addAll(newCommunities);
+                if (communities.size() > 0) {
+                    rvContent.setVisibility(View.VISIBLE);
+                    btnCreateCommunity.setVisibility(View.GONE);
+                } else {
+                    rvContent.setVisibility(View.GONE);
+                    btnCreateCommunity.setVisibility(View.VISIBLE);
+                }
             });
         }
     }

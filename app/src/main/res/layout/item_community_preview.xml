@@ -14,8 +14,8 @@
         android:layout_marginStart="0dp"
         android:layout_marginTop="0dp"
         android:adjustViewBounds="true"
-        android:maxWidth="100dp"
-        android:maxHeight="100dp"
+        android:maxWidth="24dp"
+        android:maxHeight="24dp"
         android:scaleType="centerCrop"
         app:srcCompat="@drawable/ic_explore_24px" />
 
@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="0dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="0dp"
         android:layout_toEndOf="@+id/ivIcon"
         android:maxLines="1"

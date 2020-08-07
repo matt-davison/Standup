@@ -1,8 +1,6 @@
 package com.mdavison.standup.adapters;
 
 import android.content.Context;
-import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,17 +13,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.mdavison.standup.R;
 import com.mdavison.standup.models.Community;
-import com.mdavison.standup.models.Post;
-import com.parse.ParseException;
 import com.parse.ParseFile;
 
-import java.util.Date;
 import java.util.List;
 
 /**
  * This adapter adapts Posts to a RecyclerView
  */
-public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.ViewHolder> {
+public class CommunityAdapter
+        extends RecyclerView.Adapter<CommunityAdapter.ViewHolder> {
 
     private static final String TAG = "PostAdapter";
     private final Context context;
@@ -38,8 +34,8 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.View
 
     @NonNull
     @Override
-    public CommunityAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
-                                                     int viewType) {
+    public CommunityAdapter.ViewHolder onCreateViewHolder(
+            @NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.item_community_preview, parent, false);
         return new ViewHolder(view);

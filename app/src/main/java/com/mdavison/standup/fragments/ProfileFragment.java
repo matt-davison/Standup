@@ -100,7 +100,8 @@ public class ProfileFragment extends Fragment {
         final ImageView ivProfile = view.findViewById(R.id.ivProfile);
         ParseFile profileImage = user.getParseFile("picture");
         if (profileImage != null) {
-            Glide.with(getContext()).load(profileImage.getUrl()).transform(new RoundedCorners(12)).into(ivProfile);
+            Glide.with(getContext()).load(profileImage.getUrl())
+                    .transform(new RoundedCorners(12)).into(ivProfile);
         } else {
             Glide.with(getContext()).clear(ivProfile);
         }
@@ -152,19 +153,19 @@ public class ProfileFragment extends Fragment {
     }
 
     private void queryPosts() {
-            ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
-            query.whereEqualTo(Post.KEY_AUTHOR, user);
-            query.setLimit(20);
-            query.setSkip(userPosts.size());
-            query.addDescendingOrder(Post.KEY_CREATED_AT);
-            query.findInBackground((newPosts, error) -> {
-                if (error != null) {
-                    Log.e(TAG, "Issue with getting posts", error);
-                    Toast.makeText(getContext(), "Issue getting posts",
-                            Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                postAdapter.addAll(newPosts);
+        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
+        query.whereEqualTo(Post.KEY_AUTHOR, user);
+        query.setLimit(20);
+        query.setSkip(userPosts.size());
+        query.addDescendingOrder(Post.KEY_CREATED_AT);
+        query.findInBackground((newPosts, error) -> {
+            if (error != null) {
+                Log.e(TAG, "Issue with getting posts", error);
+                Toast.makeText(getContext(), "Issue getting posts",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+            postAdapter.addAll(newPosts);
         });
     }
 

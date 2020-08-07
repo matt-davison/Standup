@@ -39,8 +39,8 @@ public class CommunityDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_community_details);
 
-        community = (Community) Parcels
-                .unwrap(getIntent().getParcelableExtra(Extras.EXTRA_COMMUNITY));
+        community = Parcels.unwrap(
+                getIntent().getParcelableExtra(Extras.EXTRA_COMMUNITY));
         final TextView tvName = findViewById(R.id.tvName);
         tvName.setText(community.getName());
         final TextView tvUserCount = findViewById(R.id.tvUserCount);
@@ -92,7 +92,8 @@ public class CommunityDetailsActivity extends AppCompatActivity {
                                 }
                                 ParseUser.getCurrentUser().saveInBackground();
                                 community.saveInBackground();
-                                tvUserCount.setText(community.getUserCount() + " followers");
+                                tvUserCount.setText(community.getUserCount() +
+                                        " followers");
                             });
                 });
         final RecyclerView rvPosts = findViewById(R.id.rvPosts);

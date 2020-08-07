@@ -44,7 +44,7 @@ GIF created with [Kap](https://getkap.co/).
 - [x] User can register an account
 - [x] User can login
 - [x] User can follow communities
-- [] User can create communities
+- [x] User can create communities
 - [x] User can vote for content (swipe left/right)
 - [x] User can view post details (swipe up)
   - [x] User can view other user profiles

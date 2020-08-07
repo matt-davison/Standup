@@ -84,7 +84,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
         public void bind(Post post) {
             try {
-                tvAuthor.setText(post.getAuthor().fetchIfNeeded().getUsername());
+                tvAuthor.setText(
+                        post.getAuthor().fetchIfNeeded().getUsername());
             } catch (ParseException e) {
                 Log.e(TAG, "Unable to fetch username");
                 tvAuthor.setText("");

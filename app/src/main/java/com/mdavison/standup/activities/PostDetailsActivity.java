@@ -38,13 +38,14 @@ public class PostDetailsActivity extends AppCompatActivity {
     private LinearLayout llComments;
     private List<Comment> comments;
     private Button btnMoreComments;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_details);
 
-        post = (Post) Parcels
-                .unwrap(getIntent().getParcelableExtra(Extras.EXTRA_POST));
+        post = Parcels.unwrap(
+                getIntent().getParcelableExtra(Extras.EXTRA_POST));
 
         final TextView tvTitle = findViewById(R.id.tvTitle);
         tvTitle.setText(post.getTitle());
@@ -110,6 +111,7 @@ public class PostDetailsActivity extends AppCompatActivity {
             }
         });
     }
+
     private void loadComments() {
         final ParseRelation<Comment> commentRelation =
                 post.getRelation(Post.KEY_COMMENTS);

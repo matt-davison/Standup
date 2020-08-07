@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.CreateCommunityActivity">
+
+
+    <EditText
+        android:id="@+id/etName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivBanner"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_toEndOf="@id/ivIcon"
+        android:hint="Community Name..."
+        android:textSize="24sp" />
+
+    <ImageView
+        android:id="@+id/ivBanner"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/ic_add_box_24px" />
+
+    <ImageView
+        android:id="@+id/ivIcon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignTop="@+id/etName"
+        android:layout_marginTop="0dp"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/ic_add_box_24px" />
+
+    <EditText
+        android:id="@+id/etDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etName"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:hint="Description..."
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/btnCreateCommunity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="0dp"
+        android:text="Create Community" />
+</RelativeLayout>
