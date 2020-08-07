@@ -15,6 +15,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -41,6 +43,7 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import org.parceler.Parcels;
 
@@ -61,6 +64,7 @@ public class StreamFragment extends Fragment {
     private CardView postBehind;
     private CardView postDetail;
     private LinearLayout llComments;
+    private Button btnMoreComments;
     private ParseUser currentUser;
     private int postsRetrieved = 0;
     private SortBy sortBy = SortBy.LATEST;
@@ -109,14 +113,25 @@ public class StreamFragment extends Fragment {
                             public void onAnimationEnd(Animator animation) {
                                 super.onAnimationEnd(animation);
                                 likePost();
-                                ValueAnimator returnAnim = ObjectAnimator
+                                ObjectAnimator
                                         .ofFloat(postFront, View.TRANSLATION_X,
-                                                0);
-                                returnAnim.setDuration(0);
-                                returnAnim.start();
+                                                0).setDuration(0).start();
                             }
                         });
                         swipeAnim.start();
+                        ValueAnimator fadeAnim = ObjectAnimator
+                                .ofFloat(postBehind, View.ALPHA, 1);
+                        fadeAnim.setDuration(250);
+                        fadeAnim.addListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                super.onAnimationEnd(animation);
+                                ObjectAnimator
+                                        .ofFloat(postBehind, View.ALPHA, 0)
+                                        .setDuration(0).start();
+                            }
+                        });
+                        fadeAnim.start();
                     }
 
                     @Override
@@ -131,15 +146,25 @@ public class StreamFragment extends Fragment {
                             public void onAnimationEnd(Animator animation) {
                                 super.onAnimationEnd(animation);
                                 viewPost();
-                                ValueAnimator returnAnim = ObjectAnimator
+                                ObjectAnimator
                                         .ofFloat(postFront, View.TRANSLATION_X,
-                                                0);
-                                returnAnim.setDuration(0);
-                                returnAnim.start();
+                                                0).setDuration(0).start();
                             }
                         });
                         swipeAnim.start();
-
+                        ValueAnimator fadeAnim = ObjectAnimator
+                                .ofFloat(postBehind, View.ALPHA, 1);
+                        fadeAnim.setDuration(250);
+                        fadeAnim.addListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                super.onAnimationEnd(animation);
+                                ObjectAnimator
+                                        .ofFloat(postBehind, View.ALPHA, 0)
+                                        .setDuration(0).start();
+                            }
+                        });
+                        fadeAnim.start();
                     }
 
                     @Override
@@ -163,10 +188,50 @@ public class StreamFragment extends Fragment {
         tvAuthor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getContext(), ProfileActivity.class);
+                final Intent i =
+                        new Intent(getContext(), ProfileActivity.class);
                 i.putExtra(Extras.EXTRA_USER,
                         Parcels.wrap(posts.get(0).getAuthor()));
                 startActivity(i);
+            }
+        });
+        postBehind.setAlpha(0);
+        postFront.setVisibility(View.INVISIBLE);
+        final EditText etNewComment =
+                postDetail.findViewById(R.id.etNewComment);
+        final Button btnCreateComment =
+                postDetail.findViewById(R.id.btnCreateComment);
+        btnCreateComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!etNewComment.getText().toString().isEmpty()) {
+                    Comment comment = new Comment();
+                    comment.setAuthor(currentUser);
+                    comment.setComment(etNewComment.getText().toString());
+                    final ParseRelation<Comment> commentRelation =
+                            posts.get(0).getRelation(Post.KEY_COMMENTS);
+                    commentRelation.add(comment);
+                    comment.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            posts.get(0).saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    etNewComment.setText("");
+                                    loadComments();
+                                }
+                            });
+                        }
+                    });
+
+                }
+            }
+        });
+        btnMoreComments = postDetail.findViewById(R.id.btnMoreComments);
+        btnMoreComments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadComments();
             }
         });
     }
@@ -222,46 +287,9 @@ public class StreamFragment extends Fragment {
         setPost(posts.get(1), postBehind);
 
         setPost(posts.get(0), postDetail);
-        ParseRelation<Comment> commentRelation =
-                posts.get(0).getRelation(Post.KEY_COMMENTS);
-        ParseQuery<Comment> query = commentRelation.getQuery();
-        query.addDescendingOrder(Comment.KEY_LIKES);
-        query.setLimit(20);
         comments.clear();
         llComments.removeAllViews();
-        query.findInBackground((results, e) -> {
-            if (e != null) {
-                Log.e(TAG, "Error fetching comments");
-            } else {
-                comments.addAll(results);
-                for (int i = 0; i < results.size(); i++) {
-                    View comment = LayoutInflater.from(getContext())
-                            .inflate(R.layout.item_comment, null);
-                    try {
-                        final TextView tvAuthor =
-                                comment.findViewById(R.id.tvAuthor);
-                        tvAuthor.setText(
-                                comments.get(i).getAuthor().fetchIfNeeded()
-                                        .getUsername());
-                        tvAuthor.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Intent i = new Intent(getContext(), ProfileActivity.class);
-                                i.putExtra(Extras.EXTRA_USER,
-                                        Parcels.wrap(posts.get(0).getAuthor()));
-                                startActivity(i);
-                            }
-                        });
-                    } catch (ParseException ex) {
-                        ex.printStackTrace();
-                    } ((TextView) comment.findViewById(R.id.tvComment))
-                            .setText(comments.get(i).getComment());
-                    llComments.addView(comment,
-                            comments.size() - results.size() + i);
-                }
-            }
-        });
-
+        loadComments();
     }
 
     private void setPost(Post post, CardView postView) {
@@ -276,8 +304,11 @@ public class StreamFragment extends Fragment {
         tvTitle.setText(post.getTitle());
         if (post.getDescription() != null) {
             tvDescription.setText(post.getDescription());
+            if (tvDescription.getVisibility() == View.GONE) {
+                tvDescription.setVisibility(View.VISIBLE);
+            }
         } else {
-            tvDescription.setText("");
+            tvDescription.setVisibility(View.GONE);
         }
         if (post.getMedia() != null) {
             Glide.with(getContext()).load(post.getMedia().getUrl()).fitCenter()
@@ -299,6 +330,55 @@ public class StreamFragment extends Fragment {
                 .getRelativeTimeSpanString(post.getCreatedAt().getTime(), now,
                         DateUtils.SECOND_IN_MILLIS).toString();
         tvRelativeCreation.setText(relativeDate);
+    }
+
+    private void loadComments() {
+        final ParseRelation<Comment> commentRelation =
+                posts.get(0).getRelation(Post.KEY_COMMENTS);
+        final ParseQuery<Comment> query = commentRelation.getQuery();
+        query.addDescendingOrder(Comment.KEY_CREATED_AT);
+        query.setLimit(5);
+        query.setSkip(comments.size());
+        query.findInBackground((results, e) -> {
+            if (e != null) {
+                Log.e(TAG, "Error fetching comments");
+            } else {
+                comments.addAll(results);
+                for (int i = 0; i < results.size(); i++) {
+                    final View comment = LayoutInflater.from(getContext())
+                            .inflate(R.layout.item_comment, null);
+                    try {
+                        final TextView tvAuthor =
+                                comment.findViewById(R.id.tvAuthor);
+                        tvAuthor.setText(
+                                results.get(i).getAuthor().fetchIfNeeded()
+                                        .getUsername());
+                        tvAuthor.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent i = new Intent(getContext(),
+                                        ProfileActivity.class);
+                                i.putExtra(Extras.EXTRA_USER,
+                                        Parcels.wrap(posts.get(0).getAuthor()));
+                                startActivity(i);
+                            }
+                        });
+                    } catch (ParseException ex) {
+                        ex.printStackTrace();
+                    }
+                    ((TextView) comment.findViewById(R.id.tvComment))
+                            .setText(results.get(i).getComment());
+                    final long now = new Date().getTime();
+                    String relativeDate = DateUtils.getRelativeTimeSpanString(
+                            results.get(i).getCreatedAt().getTime(), now,
+                            DateUtils.SECOND_IN_MILLIS).toString();
+                    ((TextView) comment.findViewById(R.id.tvDate))
+                            .setText(relativeDate);
+                    llComments.addView(comment,
+                            comments.size() - results.size() + i);
+                }
+            }
+        });
     }
 
     //TODO: Move this and all possible post logic into FeedPostHolder
@@ -378,6 +458,7 @@ public class StreamFragment extends Fragment {
                         break;
                 }
                 if (postsRetrieved == 0) {
+                    postFront.setVisibility(View.VISIBLE);
                     setPosts();
                 }
                 postsRetrieved += newPosts.size();

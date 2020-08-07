@@ -90,26 +90,51 @@
                 android:text="Comments"
                 android:textSize="16sp" />
 
+            <Button
+                android:id="@+id/btnMoreComments"
+                style="@android:style/Widget.Material.Light.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/llComments"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="0dp"
+                android:text="load more"
+                android:textColor="@android:color/primary_text_light"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btnCreateComment"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/etNewComment"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="0dp"
+                android:text="post comment"
+                android:textColor="@android:color/primary_text_light"
+                android:textSize="12sp" />
+
             <LinearLayout
                 android:id="@+id/llComments"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/tvCommentSection"
-                android:layout_marginTop="0dp"
+                android:layout_below="@+id/etNewComment"
+                android:layout_marginTop="4dp"
                 android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/btnMoreComments"
-                    style="@android:style/Widget.Material.Light.Button.Borderless"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginStart="0dp"
-                    android:layout_marginTop="0dp"
-                    android:text="load more"
-                    android:textColor="@android:color/primary_text_light" />
             </LinearLayout>
+
+            <EditText
+                android:id="@+id/etNewComment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvCommentSection"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="0dp"
+                android:layout_toStartOf="@+id/btnCreateComment"
+                android:hint="Add a comment!"
+                android:textSize="14sp" />
 
         </RelativeLayout>
     </ScrollView>

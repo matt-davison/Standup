@@ -1,10 +1,13 @@
 package com.mdavison.standup.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,6 +22,8 @@ import com.mdavison.standup.support.Extras;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import org.parceler.Parcels;
 
@@ -29,12 +34,16 @@ import java.util.List;
 public class PostDetailsActivity extends AppCompatActivity {
     private static final String TAG = "PostDetailsActivity";
 
+    private Post post;
+    private LinearLayout llComments;
+    private List<Comment> comments;
+    private Button btnMoreComments;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_details);
 
-        final Post post = (Post) Parcels
+        post = (Post) Parcels
                 .unwrap(getIntent().getParcelableExtra(Extras.EXTRA_POST));
 
         final TextView tvTitle = findViewById(R.id.tvTitle);
@@ -63,31 +72,86 @@ public class PostDetailsActivity extends AppCompatActivity {
                 .getRelativeTimeSpanString(post.getCreatedAt().getTime(), now,
                         DateUtils.SECOND_IN_MILLIS).toString();
         tvRelativeCreation.setText(relativeDate);
-        final LinearLayout llComments = findViewById(R.id.llComments);
-        final List<Comment> comments = new ArrayList<>();
-        ParseRelation<Comment> commentRelation =
+        llComments = findViewById(R.id.llComments);
+        comments = new ArrayList<>();
+        final EditText etNewComment = findViewById(R.id.etNewComment);
+        final Button btnCreateComment = findViewById(R.id.btnCreateComment);
+        btnCreateComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!etNewComment.getText().toString().isEmpty()) {
+                    Comment comment = new Comment();
+                    comment.setAuthor(ParseUser.getCurrentUser());
+                    comment.setComment(etNewComment.getText().toString());
+                    final ParseRelation<Comment> commentRelation =
+                            post.getRelation(Post.KEY_COMMENTS);
+                    commentRelation.add(comment);
+                    comment.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            post.saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    etNewComment.setText("");
+                                    loadComments();
+                                }
+                            });
+                        }
+                    });
+
+                }
+            }
+        });
+        btnMoreComments = findViewById(R.id.btnMoreComments);
+        btnMoreComments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadComments();
+            }
+        });
+    }
+    private void loadComments() {
+        final ParseRelation<Comment> commentRelation =
                 post.getRelation(Post.KEY_COMMENTS);
-        ParseQuery<Comment> query = commentRelation.getQuery();
-        query.addDescendingOrder(Comment.KEY_LIKES);
-        query.setLimit(20);
+        final ParseQuery<Comment> query = commentRelation.getQuery();
+        query.addDescendingOrder(Comment.KEY_CREATED_AT);
+        query.setLimit(10);
+        query.setSkip(comments.size());
         query.findInBackground((results, e) -> {
             if (e != null) {
                 Log.e(TAG, "Error fetching comments");
             } else {
-                comments.clear();
                 comments.addAll(results);
                 for (int i = 0; i < results.size(); i++) {
-                    View comment = LayoutInflater.from(this)
+                    final View comment = LayoutInflater.from(this)
                             .inflate(R.layout.item_comment, null);
                     try {
-                        ((TextView) comment.findViewById(R.id.tvAuthor))
-                                .setText(comments.get(i).getAuthor()
-                                        .fetchIfNeeded().getUsername());
+                        final TextView tvAuthor =
+                                comment.findViewById(R.id.tvAuthor);
+                        tvAuthor.setText(
+                                results.get(i).getAuthor().fetchIfNeeded()
+                                        .getUsername());
+                        tvAuthor.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent i = new Intent(PostDetailsActivity.this,
+                                        ProfileActivity.class);
+                                i.putExtra(Extras.EXTRA_USER,
+                                        Parcels.wrap(post.getAuthor()));
+                                startActivity(i);
+                            }
+                        });
                     } catch (ParseException ex) {
                         ex.printStackTrace();
                     }
                     ((TextView) comment.findViewById(R.id.tvComment))
                             .setText(comments.get(i).getComment());
+                    final long now = new Date().getTime();
+                    String relativeDate = DateUtils.getRelativeTimeSpanString(
+                            results.get(i).getCreatedAt().getTime(), now,
+                            DateUtils.SECOND_IN_MILLIS).toString();
+                    ((TextView) comment.findViewById(R.id.tvDate))
+                            .setText(relativeDate);
                     llComments.addView(comment,
                             comments.size() - results.size() + i);
                 }

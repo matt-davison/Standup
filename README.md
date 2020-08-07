@@ -47,28 +47,26 @@ GIF created with [Kap](https://getkap.co/).
 - [] User can create communities
 - [x] User can vote for content (swipe left/right)
 - [x] User can view post details (swipe up)
-  - [] User can view author's profile
-  - [] User can view comments
-  - [] User can create comments
+  - [x] User can view other user profiles
+  - [x] User can view comments
+  - [x] User can create comments
 - [x] User can sort a feed by trending, top, latest
 - [x] User can search for a community
 - [x] User can create posts (with or without media)
 - [x] User can set profile picture
 
 **Optional Nice-to-have Stories**
-- [] User can create posts with GIFs (bites)
-- [] User can report content
-- [] User can change username
-- [] User can view other users' profiles
-- [] User can search for posts and other users
-- [] Option to hide already seen posts in feed
-- [] Explore Feed to find collaborative-filtering suggested content
-- [] Can filter Search by creator or community
+- [ ] User can create posts with GIFs (bites)
+- [ ] User can report content
+- [ ] User can change username
+- [ ] User can search for posts and other users
+- [x] Option to hide already seen posts in feed
+- [ ] Explore Feed to find collaborative-filtering suggested content
 - [x] Detail view for a community
-- [] Save most recently used sorting method
-- [] View like/dislike history
-- [] Share posts outside app
-- [] Share posts within app (to user groups)
+- [ ] Save most recently used sorting method
+- [ ] View like/dislike history
+- [ ] Share posts outside app
+- [ ] Share posts within app (to user groups)
 
 ### 2. Screen Archetypes
 

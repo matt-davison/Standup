@@ -38,8 +38,8 @@ Usage:
   }
 */
 public class OnSwipeTouchListener implements View.OnTouchListener {
-    public static final int SWIPE_THRESHOLD = 100;
-    public static final int SWIPE_VELOCITY_THRESHOLD = 100;
+    public static final int SWIPE_THRESHOLD = 160;
+    public static final int SWIPE_VELOCITY_THRESHOLD = 160;
     private GestureDetector gestureDetector;
 
     public OnSwipeTouchListener(Context c) {
