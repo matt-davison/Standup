@@ -42,7 +42,8 @@
         android:layout_marginTop="0dp"
         android:layout_toEndOf="@+id/ivIcon"
         android:maxLines="3"
-        android:text="TextView"
+        android:text="Post Description"
+        android:textColor="@color/colorTextSecondary"
         android:textSize="14sp" />
 
     <TextView
@@ -53,5 +54,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
         android:layout_toEndOf="@+id/tvName"
-        android:text="# Users" />
+        android:text="# Users"
+        android:textColor="@color/colorTextSecondary" />
 </RelativeLayout>

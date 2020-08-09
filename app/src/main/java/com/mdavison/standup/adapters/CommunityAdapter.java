@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.mdavison.standup.R;
 import com.mdavison.standup.models.Community;
 import com.parse.ParseFile;
@@ -81,9 +82,11 @@ public class CommunityAdapter
             tvDescription.setText(community.getDescription());
             ParseFile image = community.getIcon();
             if (image != null) {
-                Glide.with(context).load(image.getUrl()).into(ivIcon);
+                Glide.with(context).load(image.getUrl()).fitCenter()
+                        .transform(new CircleCrop()).into(ivIcon);
             } else {
                 Glide.with(context).clear(ivIcon);
+                ivIcon.setImageResource(R.drawable.ic_explore_24px);
             }
             tvUserCount.setText(community.getUserCount() + " followers");
         }

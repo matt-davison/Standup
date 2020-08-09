@@ -19,7 +19,6 @@
             android:layout_alignParentStart="true"
             android:layout_marginTop="0dp"
             android:layout_marginEnd="0dp"
-            android:layout_toStartOf="@+id/imageButton"
             android:hint="Search..." />
 
         <LinearLayout
@@ -37,8 +36,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textAllCaps="false"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@color/colorTextLight"
                 android:textOff="Posts"
-                android:textOn="Posts" />
+                android:textOn="Posts"
+                android:textSize="18sp" />
 
             <ToggleButton
                 android:id="@+id/tbtnCommunities"
@@ -46,16 +49,24 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:checked="true"
+                android:textAllCaps="false"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@color/colorTextLight"
                 android:textOff="Communities"
-                android:textOn="Communities" />
+                android:textOn="Communities"
+                android:textSize="18sp" />
 
             <ToggleButton
                 android:id="@+id/tbtnUsers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textAllCaps="false"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@color/colorTextLight"
                 android:textOff="Users"
-                android:textOn="Users" />
+                android:textOn="Users"
+                android:textSize="18sp" />
 
         </LinearLayout>
 
@@ -69,12 +80,15 @@
 
         <Button
             android:id="@+id/btnCreateCommunity"
+            style="@style/Widget.MaterialComponents.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/etSearch"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="4dp"
             android:text="Create Community"
+            android:textColor="@color/colorPrimaryLight"
+            android:textSize="18sp"
             android:visibility="gone" />
 
     </RelativeLayout>

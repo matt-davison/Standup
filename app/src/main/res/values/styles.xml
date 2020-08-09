@@ -4,7 +4,8 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorBlueSteel</item>
+        <item name="colorAccent">@color/colorCheese</item>
+        <item name="colorControlHighlight">@color/colorCheese</item>
+        <item name="colorButtonNormal">@color/colorPrimary</item>
     </style>
-
 </resources>

@@ -21,6 +21,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.mdavison.standup.R;
 import com.mdavison.standup.activities.PostDetailsActivity;
@@ -101,7 +104,7 @@ public class ProfileFragment extends Fragment {
         ParseFile profileImage = user.getParseFile("picture");
         if (profileImage != null) {
             Glide.with(getContext()).load(profileImage.getUrl())
-                    .transform(new RoundedCorners(12)).into(ivProfile);
+                    .circleCrop().into(ivProfile);
         } else {
             Glide.with(getContext()).clear(ivProfile);
         }
@@ -142,7 +145,8 @@ public class ProfileFragment extends Fragment {
             if (resultCode == RESULT_OK) {
                 Bitmap takenImage = ImageHelp
                         .rotateBitmapOrientation(photoFile.getAbsolutePath());
-                ivProfile.setImageBitmap(takenImage);
+                Glide.with(getContext()).load(takenImage)
+                        .circleCrop().into(ivProfile);
                 user.put(User.KEY_PICTURE, new ParseFile(photoFile));
                 user.saveInBackground();
             } else {

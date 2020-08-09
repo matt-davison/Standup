@@ -218,6 +218,8 @@ public class StreamFragment extends Fragment {
                                 @Override
                                 public void done(ParseException e) {
                                     etNewComment.setText("");
+                                    comments.clear();
+                                    llComments.removeAllViews();
                                     loadComments();
                                 }
                             });
@@ -337,13 +339,28 @@ public class StreamFragment extends Fragment {
                 posts.get(0).getRelation(Post.KEY_COMMENTS);
         final ParseQuery<Comment> query = commentRelation.getQuery();
         query.addDescendingOrder(Comment.KEY_CREATED_AT);
-        query.setLimit(5);
+        query.setLimit(10);
         query.setSkip(comments.size());
         query.findInBackground((results, e) -> {
             if (e != null) {
                 Log.e(TAG, "Error fetching comments");
             } else {
-                comments.addAll(results);
+                if (results.size() == 0) {
+                    btnMoreComments.setVisibility(View.GONE);
+                } else {
+                    comments.addAll(results);
+                    btnMoreComments.setVisibility(View.VISIBLE);
+                    query.setSkip(comments.size());
+                    query.setLimit(1);
+                    query.findInBackground((more, err) -> {
+                        if (more.size() > 0) {
+                            btnMoreComments.setVisibility(View.VISIBLE);
+                        }
+                        else {
+                            btnMoreComments.setVisibility(View.GONE);
+                        }
+                    });
+                }
                 for (int i = 0; i < results.size(); i++) {
                     final View comment = LayoutInflater.from(getContext())
                             .inflate(R.layout.item_comment, null);

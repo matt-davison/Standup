@@ -19,9 +19,10 @@
 
     <Button
         android:id="@+id/btnCreate"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@android:color/holo_green_light"
         android:text="Create Account"
-        android:textColor="@android:color/white" />
+        android:textColor="@color/colorTextLight"
+        android:textSize="18sp" />
 </LinearLayout>

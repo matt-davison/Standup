@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,8 +19,11 @@ import com.bumptech.glide.Glide;
 import com.mdavison.standup.R;
 import com.mdavison.standup.models.Comment;
 import com.mdavison.standup.models.Post;
+import com.mdavison.standup.models.User;
 import com.mdavison.standup.support.Extras;
+import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
@@ -59,13 +63,25 @@ public class PostDetailsActivity extends AppCompatActivity {
                     .into(ivMedia);
         } else {
             Glide.with(this).clear(ivMedia);
+            ivMedia.setImageResource(0);
         }
         final TextView tvAuthor = findViewById(R.id.tvAuthor);
-        try {
-            tvAuthor.setText((post.getAuthor().fetchIfNeeded()).getUsername());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        post.getAuthor().fetchInBackground(new GetCallback<ParseUser>() {
+            @Override
+            public void done(ParseUser author, ParseException e) {
+                tvAuthor.setText(author.getUsername());
+                tvAuthor.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        final Intent i =
+                                new Intent(PostDetailsActivity.this, ProfileActivity.class);
+                        i.putExtra(Extras.EXTRA_USER, Parcels.wrap((author)));
+                        startActivity(i);
+
+                    }
+                });
+            }
+        });
         final TextView tvRelativeCreation =
                 findViewById(R.id.tvRelativeCreation);
         final long now = new Date().getTime();
@@ -94,6 +110,8 @@ public class PostDetailsActivity extends AppCompatActivity {
                                 @Override
                                 public void done(ParseException e) {
                                     etNewComment.setText("");
+                                    comments.clear();
+                                    llComments.removeAllViews();
                                     loadComments();
                                 }
                             });
@@ -110,6 +128,7 @@ public class PostDetailsActivity extends AppCompatActivity {
                 loadComments();
             }
         });
+        loadComments();
     }
 
     private void loadComments() {
@@ -123,7 +142,22 @@ public class PostDetailsActivity extends AppCompatActivity {
             if (e != null) {
                 Log.e(TAG, "Error fetching comments");
             } else {
-                comments.addAll(results);
+                if (results.size() == 0) {
+                    btnMoreComments.setVisibility(View.GONE);
+                } else {
+                    comments.addAll(results);
+                    btnMoreComments.setVisibility(View.VISIBLE);
+                    query.setSkip(comments.size());
+                    query.setLimit(1);
+                    query.findInBackground((more, err) -> {
+                        if (more.size() > 0) {
+                            btnMoreComments.setVisibility(View.VISIBLE);
+                        }
+                        else {
+                            btnMoreComments.setVisibility(View.GONE);
+                        }
+                    });
+                }
                 for (int i = 0; i < results.size(); i++) {
                     final View comment = LayoutInflater.from(this)
                             .inflate(R.layout.item_comment, null);
@@ -147,7 +181,7 @@ public class PostDetailsActivity extends AppCompatActivity {
                         ex.printStackTrace();
                     }
                     ((TextView) comment.findViewById(R.id.tvComment))
-                            .setText(comments.get(i).getComment());
+                            .setText(results.get(i).getComment());
                     final long now = new Date().getTime();
                     String relativeDate = DateUtils.getRelativeTimeSpanString(
                             results.get(i).getCreatedAt().getTime(), now,

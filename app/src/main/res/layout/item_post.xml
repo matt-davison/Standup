@@ -19,8 +19,7 @@
         android:layout_marginTop="0dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:backgroundTint="@color/colorPrimaryDark"
-        android:padding="8dp">
+        android:backgroundTint="@color/colorPrimaryDark">
 
         <TextView
             android:id="@+id/tvTitle"
@@ -40,9 +39,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvTitle"
-            android:layout_marginLeft="-8dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginRight="-8dp"
             android:adjustViewBounds="true"
             android:maxHeight="400dp"
             android:scaleType="fitCenter"
@@ -53,9 +49,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/ivMedia"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="0dp"
             android:text="Post Description"
-            android:textColor="@android:color/primary_text_light"
+            android:textColor="@color/colorTextSecondary"
             android:textSize="18sp" />
 
         <TextView
@@ -66,7 +63,8 @@
             android:layout_alignParentEnd="true"
             android:layout_marginTop="0dp"
             android:layout_marginEnd="10dp"
-            android:text="Relative Creation Time" />
+            android:text="Relative Creation Time"
+            android:textColor="@color/colorTextSecondary" />
 
         <TextView
             android:id="@+id/tvAuthor"
@@ -75,7 +73,8 @@
             android:layout_alignParentTop="true"
             android:layout_marginStart="10dp"
             android:layout_marginTop="0dp"
-            android:text="Author's username" />
+            android:text="Author's username"
+            android:textColor="@color/colorTextSecondary" />
 
 
     </RelativeLayout>

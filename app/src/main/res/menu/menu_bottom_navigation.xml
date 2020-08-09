@@ -4,27 +4,27 @@
     <item
         android:id="@+id/action_stream"
         android:enabled="true"
-        android:icon="@drawable/ic_amp_stories_24px"
+        android:icon="@drawable/ic_amp_stories_colored"
         android:title="Home"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_explore"
         android:enabled="true"
-        android:icon="@drawable/ic_explore_24px"
+        android:icon="@drawable/ic_explore_colored"
         android:title="Explore"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_compose"
         android:enabled="true"
-        android:icon="@drawable/ic_add_box_24px"
+        android:icon="@drawable/ic_add_box_colored"
         android:title="Create"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_profile"
         android:enabled="true"
-        android:icon="@drawable/ic_account_box_24px"
+        android:icon="@drawable/ic_account_box_colored"
         android:title="Profile"
         app:showAsAction="always" />
 </menu>

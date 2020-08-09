@@ -51,6 +51,7 @@ public class CommunityDetailsActivity extends AppCompatActivity {
                     .into(ivBanner);
         } else {
             Glide.with(this).clear(ivBanner);
+            ivBanner.setImageResource(0);
         }
         final TextView tvDescription = findViewById(R.id.tvDescription);
         tvDescription.setText(community.getDescription());

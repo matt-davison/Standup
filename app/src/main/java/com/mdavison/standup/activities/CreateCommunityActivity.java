@@ -89,6 +89,7 @@ public class CreateCommunityActivity extends AppCompatActivity {
         if (bannerFile != null) {
             community.setBanner(new ParseFile(bannerFile));
         }
+        community.increment(Community.KEY_USER_COUNT);
         community.saveInBackground(parseException -> {
             if (parseException != null) {
                 Log.e(TAG, "Error while saving", parseException);

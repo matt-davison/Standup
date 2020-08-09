@@ -13,6 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.mdavison.standup.R;
 import com.mdavison.standup.models.Post;
 import com.parse.ParseException;
@@ -29,10 +32,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     private static final String TAG = "PostAdapter";
     private final Context context;
     private final List<Post> posts;
-
+    private final MultiTransformation mediaTransformation;
     public PostAdapter(Context context, List<Post> posts) {
         this.context = context;
         this.posts = posts;
+        this.mediaTransformation = new MultiTransformation<>(new CenterCrop(), new RoundedCorners(20));
     }
 
     @NonNull
@@ -94,9 +98,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             tvDescription.setText(post.getDescription());
             ParseFile image = post.getMedia();
             if (image != null) {
-                Glide.with(context).load(image.getUrl()).into(ivMedia);
+                Glide.with(context).load(image.getUrl())
+                        .transform(new CenterCrop())
+                        .into(ivMedia);
             } else {
                 Glide.with(context).clear(ivMedia);
+                ivMedia.setImageResource(0);
             }
             long now = new Date().getTime();
             String relativeDate = DateUtils

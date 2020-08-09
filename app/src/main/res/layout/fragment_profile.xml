@@ -18,7 +18,9 @@
             android:layout_alignParentTop="true"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:scaleType="centerCrop"
+            android:maxWidth="100dp"
+            android:maxHeight="100dp"
+            android:scaleType="fitCenter"
             app:srcCompat="@drawable/ic_account_box_24px" />
 
         <TextView
@@ -26,10 +28,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/ivProfile"
-            android:layout_marginStart="8dp"
-            android:layout_marginBottom="12dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginBottom="0dp"
             android:layout_toEndOf="@id/ivProfile"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/colorTextPrimary"
             android:textSize="24sp"
             tools:text="Username" />
 

@@ -34,17 +34,23 @@
 
         <Button
             android:id="@+id/btnSelectImage"
+            style="@style/Widget.MaterialComponents.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1.0"
-            android:text="Select Content" />
+            android:text="Select Content"
+            android:textColor="@color/colorTextLight"
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/btnCaptureImage"
+            style="@style/Widget.MaterialComponents.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1.0"
-            android:text="Create Content" />
+            android:text="Create Content"
+            android:textColor="@color/colorTextLight"
+            android:textSize="18sp" />
 
 
     </LinearLayout>
@@ -66,10 +72,13 @@
 
     <Button
         android:id="@+id/btnSubmit"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="0dp"
-        android:text="Create Post" />
+        android:text="Create Post"
+        android:textColor="@color/colorTextLight"
+        android:textSize="18sp" />
 
 </RelativeLayout>

@@ -53,6 +53,13 @@ public class ExploreFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(TAG, "searching: " + etSearch.getText().toString());
+        queryCommunities();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -123,6 +130,7 @@ public class ExploreFragment extends Fragment {
     }
 
     private void queryCommunities() {
+        communityAdapter.clear();
         if (etSearch.getText().toString().isEmpty()) {
             ParseRelation<Community> communitiesRelation =
                     ParseUser.getCurrentUser().getRelation("communities");
@@ -135,7 +143,6 @@ public class ExploreFragment extends Fragment {
                                     Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        communityAdapter.clear();
                         communityAdapter.addAll(newCommunities);
                         if (communities.size() > 0) {
                             rvContent.setVisibility(View.VISIBLE);
@@ -160,7 +167,6 @@ public class ExploreFragment extends Fragment {
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
-                communityAdapter.clear();
                 communityAdapter.addAll(newCommunities);
                 if (communities.size() > 0) {
                     rvContent.setVisibility(View.VISIBLE);

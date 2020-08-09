@@ -8,6 +8,16 @@
     android:layout_margin="16dp"
     tools:context=".activities.LoginActivity">
 
+    <ImageView
+        android:id="@+id/ivStandup"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginTop="-32dp"
+        android:layout_marginBottom="32dp"
+        android:layout_weight="1"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/standup_transparent" />
+
     <EditText
         android:id="@+id/etUsername"
         android:layout_width="match_parent"
@@ -27,26 +37,33 @@
 
     <Button
         android:id="@+id/btnLogin"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/colorBlueSteel"
-        android:text="Log In"
-        android:textColor="@android:color/white" />
+        android:text="Login"
+        android:textColor="@color/colorPrimaryLight"
+        android:textSize="18sp" />
 
     <Button
         android:id="@+id/btnFacebookLogin"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="0dp"
-        android:backgroundTint="@color/com_facebook_button_background_color"
-        android:text="Log in with Facebook"
-        android:textColor="@color/com_facebook_button_text_color" />
+        android:text="Login with Facebook"
+        android:textColor="@color/com_facebook_button_text_color"
+        android:textSize="18sp"
+        app:backgroundTint="@color/com_facebook_button_background_color" />
 
     <Button
         android:id="@+id/btnCreate"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@android:color/holo_green_light"
+        app:backgroundTint="@color/colorCheese"
         android:text="Sign Up"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+
 </LinearLayout>
