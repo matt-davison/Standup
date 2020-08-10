@@ -9,13 +9,13 @@
 
 ## Overview
 ### Description
-Standup is a platform that allows its users to moderate the content they see. Just like standup comedy, content that people like gets more attention and content they don't "sits down" (stops being shown in feeds). Users can only navigate through content by swiping up/down to signal they liked/disliked it. Content can be interacted with by swiping up to see comments and details about the community it came from. Content can be reported by swiping down. Standup content is posted to two types of communities: me/ and up/. me/ communities are controlled by an individual and the individual account holder is the only one that can post to their personal community. up/ communities allow any follower to post to them and are a great way to get your content seen by those with similar interests. This system allows even the smallest creators to have a chance at stardom - if you post high quality content that is fitting to a community, people will start to follow your personal community!
+Standup is a platform that allows its users to moderate the content they see. Jsut like standup comedy, Standup takes a very aggressive approach in how it forces users to vote for content. Content is posted to communities that are designed to help democratize the platform and prevent a few influencers from being the only content creators most people see. 
 
 ### App Evaluation
 [Evaluation of your app across the following attributes]
    - **Category**: Social Networking/Entertainment
-   - **Mobile**: Camera is used to share images and videos. Push notifications when people interact with your content.
-   - **Story**: Creates more interaction on posts.  Disliked content will be taken down. 
+   - **Mobile**: Camera is used to share images and videos. Swipe gestures are used to interact with posts.
+   - **Story**: Creates more interaction on posts. Rating is very important for posts to be shown in trending sort.
    - **Market**: Young adults
    - **Habit**: Users will open this app many times in a day- content is very short and when using the "hot" sort only the best new content will be shown. They will also be able to post their own microblog content. The average user will mostly consume but probably create at least once a week.
    - **Scope**: This app will be challenging but it is probably possible to build by the end. A stripped down version would still be entertaining.
@@ -34,7 +34,8 @@ Standup is a platform that allows its users to moderate the content they see. Ju
 
 ### Walkthrough
 ![Video Walthrough](https://github.com/matt-davison/Standup/blob/master/Kapture.gif)
-GIF created with [Kap](https://getkap.co/).
+![Video Walthrough part 2](https://github.com/matt-davison/Standup/blob/master/Kapture-2.gif)
+GIFs created with [Kap](https://getkap.co/).
 
 ## Product Spec
 
@@ -76,27 +77,17 @@ GIF created with [Kap](https://getkap.co/).
     * User can login
 * Stream
     * User can view home feed
-    * User can View a community's feed
-    * User can Follow a community
-    * User can sort feed
-* Search
-    * User can Find a community
-    * User can Create a community
-    * User can Follow a community
 * Explore
-    * User can use Explore Feed to find suggested content
-    * User can Follow a community
+    * User can use Explore Feed to find suggested communities
+    * User can search for communities
 * Creation
     * User can create content
 * Profile
-    * User can view settings menu
     * User can View account details
-    * User can View me/ community details
-    * User can View up/ community details
+    * User can view the their posts
 * Detail
-    * User can interact with content
-    * User can go to View me/ community details
-    * User can go to View up/ community details
+    * User can comment on posts
+    * User can follow communities and view posts in a list
 
 ### 3. Navigation
 
@@ -105,36 +96,24 @@ GIF created with [Kap](https://getkap.co/).
 * Stream
 * Explore
 * Create
-* Activity
 * Profile
 
 **Flow Navigation** (Screen to Screen)
-
-* Register
-    * Explore
-    * Search
-    * Stream
-        * Detail
 * Login
-    * Stream
-        * Detail
-* Stream
-    * Detail
-    * Profile
+  * Register
+  * Home Feed
+* Home Feed
+  * Profile
 * Explore
-    * Stream
-        * Detail
-    * Search
-        * Stream
-* Creation
-    * Profile
+  * Community Details
+    * Post Details
+      * Profile Details
+* Create
+  * Post Details
 * Profile
-    * Settings
-    * Detail
-    * Stream
-* Detail
-    * Profile
-
+  * Post Details
+  * Login
+  
 ## Wireframes
 
 https://www.figma.com/file/lbDroPNd0w1CCVdORwZZ1w/Standup?node-id=0%3A1
@@ -150,11 +129,9 @@ User
 |email|String|The User's email address|
 |password|String|The User's password|
 |communities|Relation to Community|The communities a User follows|
-|followers|Number|The number of followers|
-|followings|Number|The number of followings|
-|following|Relation to User|The Users this User is following|
 |tagHistory|JSONObject|The User's tag history and preferences [{tagId, likes, views}]|
 |likeHistory|Relation to Post|The posts a user has liked|
+|viewHistory|Relation to Post|The posts a user has liked|
 
 Post
 | Property      | Type      | Description        |
@@ -209,14 +186,13 @@ Home Feed Screen
 - (Create/POST) Create a new comment on a post
 Explore Screen
 - (Read/GET) User's followed communities
-- (Read/GET) Query recommended posts
-- (Read/GET) Query for specific community
+- (Read/GET) Query recommended communities
+- (Read/GET) Search community
+- (Create/POST) Create community
+- (Update/PUT) Follow a community
 Create Post Screen
 - (Create/POST) Create a new post object
 Profile Screen
 - (Read/GET) Query logged in user object
 - (Update/PUT) Update user profile image
-- (Update/PUT) Update user username
 - (Read/GET) Query all posts where user is author
-- (Read/GET) Query followers
-- (Read/GET) Query following
