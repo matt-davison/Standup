@@ -56,12 +56,12 @@ GIF created with [Kap](https://getkap.co/).
 - [x] User can set profile picture
 
 **Optional Nice-to-have Stories**
-- [ ] User can create posts with GIFs (bites)
+- [x] User can create posts with GIFs (bites)
 - [ ] User can report content
 - [ ] User can change username
 - [ ] User can search for posts and other users
 - [x] Option to hide already seen posts in feed
-- [ ] Explore Feed to find collaborative-filtering suggested content
+- [x] Explore Feed shows suggested communities
 - [x] Detail view for a community
 - [ ] Save most recently used sorting method
 - [ ] View like/dislike history

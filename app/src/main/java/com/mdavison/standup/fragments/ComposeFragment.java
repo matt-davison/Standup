@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 
 import com.anurag.multiselectionspinner.MultiSelectionSpinnerDialog;
 import com.anurag.multiselectionspinner.MultiSpinner;
+import com.bumptech.glide.Glide;
 import com.mdavison.standup.R;
 import com.mdavison.standup.activities.PostDetailsActivity;
 import com.mdavison.standup.models.Community;
@@ -40,6 +41,7 @@ import org.parceler.Parcels;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +49,7 @@ import java.util.Set;
 
 import static android.app.Activity.RESULT_OK;
 import static android.os.Environment.DIRECTORY_PICTURES;
+import static android.provider.MediaStore.*;
 
 
 /**
@@ -57,7 +60,7 @@ public class ComposeFragment extends Fragment
         implements MultiSelectionSpinnerDialog.OnMultiSpinnerSelectionListener {
 
     private static final String TAG = "ComposeFragment";
-    private static final String PHOTO_FILENAME = "photo.jpg";
+    private static final String PHOTO_FILENAME = "photo.gif";
     private File photoFile;
     private ImageView ivPostImage;
     private EditText etTitle;
@@ -140,8 +143,6 @@ public class ComposeFragment extends Fragment
         }
         if (requestCode == RequestCodes.PICK_PHOTO_CODE && data != null) {
             Uri photoUri = data.getData();
-            Bitmap selectedImage =
-                    ImageHelp.loadFromUri(getContext(), photoUri);
             File mediaStorageDir = new File(
                     getContext().getExternalFilesDir(DIRECTORY_PICTURES), TAG);
             if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
@@ -152,10 +153,18 @@ public class ComposeFragment extends Fragment
             }
             String destinationFilename =
                     mediaStorageDir.getPath() + File.separator + PHOTO_FILENAME;
-            try (FileOutputStream out = new FileOutputStream(
-                    destinationFilename)) {
-                selectedImage.compress(Bitmap.CompressFormat.PNG, 100, out);
-            } catch (IOException e) {
+            try {
+                InputStream in =  getContext().getContentResolver().openInputStream(photoUri);
+                FileOutputStream out = new FileOutputStream(new File(destinationFilename));
+                byte[] buf = new byte[1024];
+                int len;
+                while((len=in.read(buf))>0){
+                    out.write(buf,0,len);
+                }
+                out.close();
+                in.close();
+            }
+            catch (IOException e) {
                 e.printStackTrace();
                 Log.e(TAG, "failed to save photo");
                 Toast.makeText(getContext(), "Failed to select photo",
@@ -163,17 +172,17 @@ public class ComposeFragment extends Fragment
                 return;
             }
             photoFile = new File(destinationFilename);
-            ivPostImage.setImageBitmap(selectedImage);
+            Glide.with(getContext()).load(photoUri).into(ivPostImage);
         }
     }
 
     private void launchCamera() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Intent intent = new Intent(ACTION_IMAGE_CAPTURE);
         photoFile =
                 ImageHelp.getPhotoFileUri(getContext(), TAG, PHOTO_FILENAME);
         Uri fileProvider = FileProvider.getUriForFile(getContext(),
                 "com.codepath.fileprovider.standup", photoFile);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
+        intent.putExtra(EXTRA_OUTPUT, fileProvider);
         if (intent.resolveActivity(getContext().getPackageManager()) != null) {
             startActivityForResult(intent,
                     RequestCodes.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
