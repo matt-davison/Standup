@@ -1,5 +1,6 @@
 package com.mdavison.standup.activities;
 
+import android.app.DownloadManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -19,8 +20,11 @@ import com.mdavison.standup.models.User;
 import com.mdavison.standup.support.Extras;
 import com.mdavison.standup.support.ImageHelp;
 import com.mdavison.standup.support.RequestCodes;
+import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
+
+import org.parceler.Parcels;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -96,7 +100,6 @@ public class CreateCommunityActivity extends AppCompatActivity {
                 Toast.makeText(this, "Error while saving", Toast.LENGTH_SHORT)
                         .show();
             } else {
-                //TODO: Show new Community in a new CommunityDetailsActivity
                 Toast.makeText(this, "Community created!", Toast.LENGTH_SHORT)
                         .show();
                 etDescription.setText("");
@@ -105,6 +108,9 @@ public class CreateCommunityActivity extends AppCompatActivity {
                 ivBanner.setImageResource(R.drawable.ic_add_box_24px);
                 ParseUser.getCurrentUser().getRelation(User.KEY_COMMUNITIES).add(community);
                 ParseUser.getCurrentUser().saveInBackground();
+                Intent i = new Intent(CreateCommunityActivity.this, CommunityDetailsActivity.class);
+                        i.putExtra(Extras.EXTRA_COMMUNITY, Parcels.wrap(community));
+                startActivityForResult(i, RequestCodes.LEAVE);
             }
         });
     }
@@ -112,6 +118,9 @@ public class CreateCommunityActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RequestCodes.LEAVE) {
+            finish();
+        }
         if (requestCode == RequestCodes.PICK_ICON_CODE ||
                 requestCode == RequestCodes.PICK_BANNER_CODE && data != null) {
             Uri photoUri = data.getData();

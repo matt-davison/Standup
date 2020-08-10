@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,87 +10,76 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <EditText
-            android:id="@+id/etSearch"
+        <RelativeLayout
+            android:id="@+id/rlTop"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/llMenu"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="0dp"
-            android:layout_marginEnd="0dp"
-            android:hint="Search..." />
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/etSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="0dp"
+                android:hint="Search..." />
+
+            <Button
+                android:id="@+id/btnCreateCommunity"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/etSearch"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="4dp"
+                android:text="Create Community"
+                android:textColor="@color/colorPrimaryLight"
+                android:textSize="18sp"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rlTop"
+        android:layout_marginTop="0dp">
 
         <LinearLayout
-            android:id="@+id/llMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="0dp"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <ToggleButton
-                android:id="@+id/tbtnPosts"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <TextView
+                android:id="@+id/tvSuggested"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textAllCaps="false"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textColor="@color/colorTextLight"
-                android:textOff="Posts"
-                android:textOn="Posts"
+                android:layout_marginTop="0dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:text="Suggested:"
+                android:textColor="@color/colorTextSecondary"
                 android:textSize="18sp" />
 
-            <ToggleButton
-                android:id="@+id/tbtnCommunities"
-                android:layout_width="wrap_content"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvSuggested"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:checked="true"
-                android:textAllCaps="false"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textColor="@color/colorTextLight"
-                android:textOff="Communities"
-                android:textOn="Communities"
-                android:textSize="18sp" />
-
-            <ToggleButton
-                android:id="@+id/tbtnUsers"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textAllCaps="false"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textColor="@color/colorTextLight"
-                android:textOff="Users"
-                android:textOn="Users"
-                android:textSize="18sp" />
+                android:layout_marginTop="0dp" />
 
         </LinearLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvContent"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/etSearch"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="0dp" />
-
-        <Button
-            android:id="@+id/btnCreateCommunity"
-            style="@style/Widget.MaterialComponents.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/etSearch"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="4dp"
-            android:text="Create Community"
-            android:textColor="@color/colorPrimaryLight"
-            android:textSize="18sp"
-            android:visibility="gone" />
-
-    </RelativeLayout>
+    </ScrollView>
 
 
-</FrameLayout>
+</RelativeLayout>
+
+
+    </FrameLayout>

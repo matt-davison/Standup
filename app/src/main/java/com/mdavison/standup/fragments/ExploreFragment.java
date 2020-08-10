@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,6 +27,8 @@ import com.mdavison.standup.models.Community;
 import com.mdavison.standup.support.EndlessRecyclerViewScrollListener;
 import com.mdavison.standup.support.Extras;
 import com.mdavison.standup.support.ItemClickSupport;
+import com.parse.FindCallback;
+import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
@@ -42,12 +45,14 @@ import java.util.List;
 public class ExploreFragment extends Fragment {
     private static final String TAG = "ExploreFragment";
     private List<Community> communities;
+    private List<Community> suggested;
     private CommunityAdapter communityAdapter;
-    private EditText etSearch;
-
+    private CommunityAdapter suggestedAdapter;
     private RecyclerView rvContent;
+    private RecyclerView rvSuggested;
     private Button btnCreateCommunity;
-
+    private EditText etSearch;
+    private TextView tvSuggested;
     public ExploreFragment() {
         // Required empty public constructor
     }
@@ -55,6 +60,7 @@ public class ExploreFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        suggestedAdapter.clear();
         queryCommunities();
     }
 
@@ -69,8 +75,8 @@ public class ExploreFragment extends Fragment {
     public void onViewCreated(@NonNull View view,
                               @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        communities = new ArrayList<>();
         etSearch = view.findViewById(R.id.etSearch);
+        tvSuggested =view.findViewById(R.id.tvSuggested);
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i,
@@ -87,7 +93,6 @@ public class ExploreFragment extends Fragment {
                 queryCommunities();
             }
         });
-        rvContent = view.findViewById(R.id.rvContent);
         btnCreateCommunity = view.findViewById(R.id.btnCreateCommunity);
         btnCreateCommunity.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,7 +104,9 @@ public class ExploreFragment extends Fragment {
                 startActivity(i);
             }
         });
+        communities = new ArrayList<>();
         communityAdapter = new CommunityAdapter(getContext(), communities);
+        rvContent = view.findViewById(R.id.rvContent);
         rvContent.setAdapter(communityAdapter);
         final LinearLayoutManager layoutManager =
                 new LinearLayoutManager(getContext());
@@ -116,6 +123,25 @@ public class ExploreFragment extends Fragment {
                         startActivity(i);
                     }
                 });
+        suggested = new ArrayList<>();
+        suggestedAdapter = new CommunityAdapter(getContext(), suggested);
+        rvSuggested = view.findViewById(R.id.rvSuggested);
+        rvSuggested.setAdapter(suggestedAdapter);
+        final LinearLayoutManager suggestedManager =
+                new LinearLayoutManager(getContext());
+        rvSuggested.setLayoutManager(suggestedManager);
+        ItemClickSupport.addTo(rvSuggested).setOnItemClickListener(
+                new ItemClickSupport.OnItemClickListener() {
+                    @Override
+                    public void onItemClicked(RecyclerView recyclerView,
+                                              int position, View v) {
+                        Intent i = new Intent(getContext(),
+                                CommunityDetailsActivity.class);
+                        i.putExtra(Extras.EXTRA_COMMUNITY,
+                                Parcels.wrap(suggested.get(position)));
+                        startActivity(i);
+                    }
+                });
         final EndlessRecyclerViewScrollListener scrollListener =
                 new EndlessRecyclerViewScrollListener(layoutManager) {
                     @Override
@@ -124,7 +150,33 @@ public class ExploreFragment extends Fragment {
                         queryCommunities();
                     }
                 };
-        rvContent.addOnScrollListener(scrollListener);
+        rvSuggested.addOnScrollListener(scrollListener);
+    }
+
+    private void querySuggested() {
+        ParseQuery<Community> querySuggested = ParseQuery.getQuery("Community");
+        querySuggested.whereDoesNotMatchKeyInQuery(Community.KEY_OBJECT_ID,
+                Community.KEY_OBJECT_ID,
+                ParseUser.getCurrentUser().getRelation("communities").getQuery());
+        querySuggested.setLimit(20);
+        querySuggested.setSkip(suggested.size());
+        querySuggested.addDescendingOrder(Community.KEY_USER_COUNT);
+        querySuggested.findInBackground(new FindCallback<Community>() {
+            @Override
+            public void done(List<Community> newSuggested, ParseException e) {
+                suggestedAdapter.addAll(newSuggested);
+                showSuggested();
+            }
+        });
+    }
+
+    private void showSuggested() {
+        tvSuggested.setVisibility(View.VISIBLE);
+    }
+
+    private void hideSuggested() {
+        tvSuggested.setVisibility(View.GONE);
+        suggestedAdapter.clear();
     }
 
     private void queryCommunities() {
@@ -151,8 +203,9 @@ public class ExploreFragment extends Fragment {
                             btnCreateCommunity.setVisibility(View.VISIBLE);
                         }
                     });
+            querySuggested();
         } else {
-            //TODO: Refactor to combine query results logic
+            hideSuggested();
             ParseQuery<Community> query = ParseQuery.getQuery(Community.class);
             query.setLimit(20);
             query.addDescendingOrder(Community.KEY_USER_COUNT);

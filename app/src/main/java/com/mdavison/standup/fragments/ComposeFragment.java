@@ -193,14 +193,14 @@ public class ComposeFragment extends Fragment
         for (Community community : selectedCommunities) {
             userCommunities.add(community);
         }
+        Toast.makeText(getContext(), "Uploading Post!",
+                Toast.LENGTH_SHORT).show();
         newPost.saveInBackground(parseException -> {
             if (parseException != null) {
                 Log.e(TAG, "Error while saving", parseException);
                 Toast.makeText(getContext(), "Error while saving",
                         Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(getContext(), "Post uploaded!",
-                        Toast.LENGTH_SHORT).show();
                 etDescription.setText("");
                 etTitle.setText("");
                 ivPostImage.setImageResource(R.drawable.ic_add_box_24px);
