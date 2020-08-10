@@ -114,24 +114,23 @@ public class StreamFragment extends Fragment {
                                 super.onAnimationEnd(animation);
                                 likePost();
                                 ObjectAnimator
+                                        .ofFloat(postBehind, View.TRANSLATION_X,
+                                                0).setDuration(0).start();
+                                ObjectAnimator
                                         .ofFloat(postFront, View.TRANSLATION_X,
                                                 0).setDuration(0).start();
+                                ObjectAnimator
+                                        .ofFloat(postBehind, View.ALPHA, 0)
+                                        .setDuration(0).start();
                             }
                         });
                         swipeAnim.start();
                         ValueAnimator fadeAnim = ObjectAnimator
                                 .ofFloat(postBehind, View.ALPHA, 1);
                         fadeAnim.setDuration(250);
-                        fadeAnim.addListener(new AnimatorListenerAdapter() {
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                super.onAnimationEnd(animation);
-                                ObjectAnimator
-                                        .ofFloat(postBehind, View.ALPHA, 0)
-                                        .setDuration(0).start();
-                            }
-                        });
-                        fadeAnim.start();
+                        if (posts.size() >= 2) {
+                            fadeAnim.start();
+                        }
                     }
 
                     @Override
@@ -145,26 +144,25 @@ public class StreamFragment extends Fragment {
                             @Override
                             public void onAnimationEnd(Animator animation) {
                                 super.onAnimationEnd(animation);
-                                viewPost();
+                                likePost();
+                                ObjectAnimator
+                                        .ofFloat(postBehind, View.TRANSLATION_X,
+                                                0).setDuration(0).start();
                                 ObjectAnimator
                                         .ofFloat(postFront, View.TRANSLATION_X,
                                                 0).setDuration(0).start();
+                                ObjectAnimator
+                                        .ofFloat(postBehind, View.ALPHA, 0)
+                                        .setDuration(0).start();
                             }
                         });
                         swipeAnim.start();
                         ValueAnimator fadeAnim = ObjectAnimator
                                 .ofFloat(postBehind, View.ALPHA, 1);
                         fadeAnim.setDuration(250);
-                        fadeAnim.addListener(new AnimatorListenerAdapter() {
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                super.onAnimationEnd(animation);
-                                ObjectAnimator
-                                        .ofFloat(postBehind, View.ALPHA, 0)
-                                        .setDuration(0).start();
-                            }
-                        });
-                        fadeAnim.start();
+                        if (posts.size() >= 2) {
+                            fadeAnim.start();
+                        }
                     }
 
                     @Override
@@ -266,7 +264,17 @@ public class StreamFragment extends Fragment {
         if (posts.size() <= 5) {
             queryPosts();
         }
-        setPosts();
+        CardView temp = postFront;
+        postFront = postBehind;
+        postBehind = temp;
+
+        if (posts.size() >= 2) {
+            setPost(posts.get(1), postBehind);
+        }
+        setPost(posts.get(0), postDetail);
+        comments.clear();
+        llComments.removeAllViews();
+        loadComments();
     }
 
     private void setPosts() {
@@ -287,7 +295,6 @@ public class StreamFragment extends Fragment {
 
         setPost(posts.get(0), postFront);
         setPost(posts.get(1), postBehind);
-
         setPost(posts.get(0), postDetail);
         comments.clear();
         llComments.removeAllViews();
