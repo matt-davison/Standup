@@ -57,7 +57,7 @@ import java.util.List;
 public class StreamFragment extends Fragment {
 
     private static final String TAG = "StreamFragment";
-    private static final int MAX_TRENDING_HRS = 480;
+    private static final int MAX_TRENDING_HRS = 240;
     private List<Post> posts;
     private List<Comment> comments;
     private CardView postFront;
@@ -184,6 +184,28 @@ public class StreamFragment extends Fragment {
         svDetailsHolder.setOnTouchListener(swipeListener);
         final TextView tvAuthor = postFront.findViewById(R.id.tvAuthor);
         tvAuthor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Intent i =
+                        new Intent(getContext(), ProfileActivity.class);
+                i.putExtra(Extras.EXTRA_USER,
+                        Parcels.wrap(posts.get(0).getAuthor()));
+                startActivity(i);
+            }
+        });
+        final TextView tvAuthorBehind = postBehind.findViewById(R.id.tvAuthor);
+        tvAuthorBehind.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Intent i =
+                        new Intent(getContext(), ProfileActivity.class);
+                i.putExtra(Extras.EXTRA_USER,
+                        Parcels.wrap(posts.get(0).getAuthor()));
+                startActivity(i);
+            }
+        });
+        final TextView tvAuthorDetails = postDetail.findViewById(R.id.tvAuthor);
+        tvAuthorBehind.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final Intent i =
@@ -362,44 +384,49 @@ public class StreamFragment extends Fragment {
                     query.findInBackground((more, err) -> {
                         if (more.size() > 0) {
                             btnMoreComments.setVisibility(View.VISIBLE);
-                        }
-                        else {
+                        } else {
                             btnMoreComments.setVisibility(View.GONE);
                         }
                     });
                 }
                 for (int i = 0; i < results.size(); i++) {
-                    final View comment = LayoutInflater.from(getContext())
-                            .inflate(R.layout.item_comment, null);
-                    try {
-                        final TextView tvAuthor =
-                                comment.findViewById(R.id.tvAuthor);
-                        tvAuthor.setText(
-                                results.get(i).getAuthor().fetchIfNeeded()
-                                        .getUsername());
-                        tvAuthor.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Intent i = new Intent(getContext(),
-                                        ProfileActivity.class);
-                                i.putExtra(Extras.EXTRA_USER,
-                                        Parcels.wrap(posts.get(0).getAuthor()));
-                                startActivity(i);
-                            }
-                        });
-                    } catch (ParseException ex) {
-                        ex.printStackTrace();
+                    if (getContext() != null) {
+                        final View comment = LayoutInflater.from(getContext())
+                                .inflate(R.layout.item_comment, null);
+                        try {
+                            final TextView tvAuthor =
+                                    comment.findViewById(R.id.tvAuthor);
+                            tvAuthor.setText(
+                                    results.get(i).getAuthor().fetchIfNeeded()
+                                            .getUsername());
+                            tvAuthor.setOnClickListener(
+                                    new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            Intent i = new Intent(getContext(),
+                                                    ProfileActivity.class);
+                                            i.putExtra(Extras.EXTRA_USER,
+                                                    Parcels.wrap(posts.get(0)
+                                                            .getAuthor()));
+                                            startActivity(i);
+                                        }
+                                    });
+                        } catch (ParseException ex) {
+                            ex.printStackTrace();
+                        }
+                        ((TextView) comment.findViewById(R.id.tvComment))
+                                .setText(results.get(i).getComment());
+                        final long now = new Date().getTime();
+                        String relativeDate = DateUtils
+                                .getRelativeTimeSpanString(
+                                        results.get(i).getCreatedAt().getTime(),
+                                        now, DateUtils.SECOND_IN_MILLIS)
+                                .toString();
+                        ((TextView) comment.findViewById(R.id.tvDate))
+                                .setText(relativeDate);
+                        llComments.addView(comment,
+                                comments.size() - results.size() + i);
                     }
-                    ((TextView) comment.findViewById(R.id.tvComment))
-                            .setText(results.get(i).getComment());
-                    final long now = new Date().getTime();
-                    String relativeDate = DateUtils.getRelativeTimeSpanString(
-                            results.get(i).getCreatedAt().getTime(), now,
-                            DateUtils.SECOND_IN_MILLIS).toString();
-                    ((TextView) comment.findViewById(R.id.tvDate))
-                            .setText(relativeDate);
-                    llComments.addView(comment,
-                            comments.size() - results.size() + i);
                 }
             }
         });

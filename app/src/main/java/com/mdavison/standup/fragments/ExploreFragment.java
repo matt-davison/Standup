@@ -55,7 +55,6 @@ public class ExploreFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.i(TAG, "searching: " + etSearch.getText().toString());
         queryCommunities();
     }
 
@@ -105,7 +104,6 @@ public class ExploreFragment extends Fragment {
         final LinearLayoutManager layoutManager =
                 new LinearLayoutManager(getContext());
         rvContent.setLayoutManager(layoutManager);
-        queryCommunities();
         ItemClickSupport.addTo(rvContent).setOnItemClickListener(
                 new ItemClickSupport.OnItemClickListener() {
                     @Override
@@ -130,11 +128,11 @@ public class ExploreFragment extends Fragment {
     }
 
     private void queryCommunities() {
-        communityAdapter.clear();
         if (etSearch.getText().toString().isEmpty()) {
             ParseRelation<Community> communitiesRelation =
                     ParseUser.getCurrentUser().getRelation("communities");
             communitiesRelation.getQuery()
+                    .addDescendingOrder(Community.KEY_USER_COUNT)
                     .findInBackground((newCommunities, error) -> {
                         if (error != null) {
                             Log.e(TAG, "Issue with getting communities", error);
@@ -143,6 +141,7 @@ public class ExploreFragment extends Fragment {
                                     Toast.LENGTH_SHORT).show();
                             return;
                         }
+                        communityAdapter.clear();
                         communityAdapter.addAll(newCommunities);
                         if (communities.size() > 0) {
                             rvContent.setVisibility(View.VISIBLE);
@@ -156,7 +155,6 @@ public class ExploreFragment extends Fragment {
             //TODO: Refactor to combine query results logic
             ParseQuery<Community> query = ParseQuery.getQuery(Community.class);
             query.setLimit(20);
-            query.setSkip(communities.size());
             query.addDescendingOrder(Community.KEY_USER_COUNT);
             query.whereStartsWith(Community.KEY_NAME,
                     etSearch.getText().toString());
@@ -167,6 +165,7 @@ public class ExploreFragment extends Fragment {
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
+                communityAdapter.clear();
                 communityAdapter.addAll(newCommunities);
                 if (communities.size() > 0) {
                     rvContent.setVisibility(View.VISIBLE);

@@ -42,10 +42,13 @@ import com.parse.ParseUser;
 import org.parceler.Parcels;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
+import static android.os.Environment.DIRECTORY_PICTURES;
 
 /**
  * This Fragment shows details about a user.
@@ -91,7 +94,11 @@ public class ProfileFragment extends Fragment {
             ivProfile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    launchCamera();
+                    Intent intent = new Intent(Intent.ACTION_PICK,
+                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    if (intent.resolveActivity(getContext().getPackageManager()) != null) {
+                        startActivityForResult(intent, RequestCodes.PICK_PHOTO_CODE);
+                    }
                 }
             });
         } else {
@@ -141,18 +148,35 @@ public class ProfileFragment extends Fragment {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RequestCodes.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                Bitmap takenImage = ImageHelp
-                        .rotateBitmapOrientation(photoFile.getAbsolutePath());
-                Glide.with(getContext()).load(takenImage)
-                        .circleCrop().into(ivProfile);
-                user.put(User.KEY_PICTURE, new ParseFile(photoFile));
-                user.saveInBackground();
-            } else {
-                Toast.makeText(getContext(), "Picture wasn't taken!",
+        if (requestCode == RequestCodes.PICK_PHOTO_CODE && data != null) {
+            Uri photoUri = data.getData();
+            Bitmap selectedImage =
+                    ImageHelp.loadFromUri(getContext(), photoUri);
+            File mediaStorageDir = new File(
+                    getContext().getExternalFilesDir(DIRECTORY_PICTURES), TAG);
+            if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
+                Log.e(TAG, "failed to create directory");
+                Toast.makeText(getContext(), "Failed to select photo",
                         Toast.LENGTH_SHORT).show();
+                return;
             }
+            String destinationFilename =
+                    mediaStorageDir.getPath() + File.separator + PHOTO_FILENAME;
+            try (FileOutputStream out = new FileOutputStream(
+                    destinationFilename)) {
+                selectedImage.compress(Bitmap.CompressFormat.PNG, 100, out);
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e(TAG, "failed to save photo");
+                Toast.makeText(getContext(), "Failed to select photo",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+            photoFile = new File(destinationFilename);
+            Glide.with(getContext()).load(photoFile)
+                    .circleCrop().into(ivProfile);
+            user.put(User.KEY_PICTURE, new ParseFile(photoFile));
+            user.saveInBackground();
         }
     }
 

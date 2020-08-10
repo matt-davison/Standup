@@ -23,8 +23,10 @@ import androidx.fragment.app.Fragment;
 import com.anurag.multiselectionspinner.MultiSelectionSpinnerDialog;
 import com.anurag.multiselectionspinner.MultiSpinner;
 import com.mdavison.standup.R;
+import com.mdavison.standup.activities.PostDetailsActivity;
 import com.mdavison.standup.models.Community;
 import com.mdavison.standup.models.Post;
+import com.mdavison.standup.support.Extras;
 import com.mdavison.standup.support.ImageHelp;
 import com.mdavison.standup.support.RequestCodes;
 import com.parse.FindCallback;
@@ -32,6 +34,8 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
+
+import org.parceler.Parcels;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -195,12 +199,14 @@ public class ComposeFragment extends Fragment
                 Toast.makeText(getContext(), "Error while saving",
                         Toast.LENGTH_SHORT).show();
             } else {
-                //TODO: Show user their new post!
                 Toast.makeText(getContext(), "Post uploaded!",
                         Toast.LENGTH_SHORT).show();
                 etDescription.setText("");
                 etTitle.setText("");
                 ivPostImage.setImageResource(R.drawable.ic_add_box_24px);
+                Intent i = new Intent(getContext(), PostDetailsActivity.class);
+                i.putExtra(Extras.EXTRA_POST, Parcels.wrap(newPost));
+                startActivity(i);
             }
         });
     }
