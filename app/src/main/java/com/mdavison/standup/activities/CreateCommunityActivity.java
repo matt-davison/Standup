@@ -35,7 +35,8 @@ import static android.os.Environment.DIRECTORY_PICTURES;
 public class CreateCommunityActivity extends AppCompatActivity {
 
     private static final String TAG = "CreateCommunityActivity";
-    private static final String PHOTO_FILENAME = "photo.jpg";
+    private static final String ICON_FILENAME = "icon.jpg";
+    private static final String BANNER_FILENAME = "banner.jpg";
     private EditText etName;
     private EditText etDescription;
     private ImageView ivIcon;
@@ -133,8 +134,15 @@ public class CreateCommunityActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
                 return;
             }
-            String destinationFilename =
-                    mediaStorageDir.getPath() + File.separator + PHOTO_FILENAME;
+            String destinationFilename;
+            if (requestCode == RequestCodes.PICK_ICON_CODE) {
+                destinationFilename =
+                        mediaStorageDir.getPath() + File.separator +
+                                ICON_FILENAME;
+            } else {
+                destinationFilename = mediaStorageDir.getPath() + File.separator +
+                        BANNER_FILENAME;
+            }
             try (FileOutputStream out = new FileOutputStream(
                     destinationFilename)) {
                 selectedImage.compress(Bitmap.CompressFormat.PNG, 100, out);

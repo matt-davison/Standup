@@ -194,6 +194,7 @@ public class ComposeFragment extends Fragment
         newPost.setAuthor(ParseUser.getCurrentUser());
         newPost.setDescription(etDescription.getText().toString());
         newPost.setTitle(etTitle.getText().toString());
+        newPost.put(Post.KEY_RATING, 0.5);
         if (photoFile != null) {
             newPost.setMedia(new ParseFile(photoFile));
         }

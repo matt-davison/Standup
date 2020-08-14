@@ -58,6 +58,7 @@ public class StreamFragment extends Fragment {
 
     private static final String TAG = "StreamFragment";
     private static final int MAX_TRENDING_HRS = 240;
+    private static final float RATING_MIN = 0.26f;
     private List<Post> posts;
     private List<Comment> comments;
     private CardView postFront;
@@ -144,7 +145,7 @@ public class StreamFragment extends Fragment {
                             @Override
                             public void onAnimationEnd(Animator animation) {
                                 super.onAnimationEnd(animation);
-                                likePost();
+                                viewPost();
                                 ObjectAnimator
                                         .ofFloat(postBehind, View.TRANSLATION_X,
                                                 0).setDuration(0).start();
@@ -491,6 +492,7 @@ public class StreamFragment extends Fragment {
                     query.addDescendingOrder(Post.KEY_CREATED_AT);
                     break;
             }
+            query.whereGreaterThan(Post.KEY_RATING, RATING_MIN);
             query.findInBackground((newPosts, error) -> {
                 if (error != null) {
                     Log.e(TAG, "Issue with getting posts", error);
